@@ -1,0 +1,865 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ValesRdzDatosModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="clientes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="estatus" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="128" />
+          <Property Name="rfc" Type="varchar" MaxLength="15" />
+          <Property Name="calle" Type="varchar" MaxLength="80" />
+          <Property Name="numint" Type="varchar" MaxLength="15" />
+          <Property Name="numext" Type="varchar" MaxLength="15" />
+          <Property Name="colonia" Type="varchar" MaxLength="60" />
+          <Property Name="cp" Type="varchar" MaxLength="5" />
+          <Property Name="ciudad" Type="varchar" MaxLength="60" />
+          <Property Name="municipio" Type="varchar" MaxLength="60" />
+          <Property Name="estado" Type="varchar" MaxLength="60" />
+          <Property Name="pais" Type="varchar" MaxLength="60" />
+          <Property Name="telefono" Type="varchar" MaxLength="100" />
+          <Property Name="email" Type="varchar" MaxLength="100" />
+          <Property Name="obs" Type="varchar" MaxLength="512" />
+          <Property Name="fecha_alta" Type="date" />
+          <Property Name="usuario" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="empresas">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="estatus" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="128" />
+          <Property Name="rfc" Type="varchar" MaxLength="15" />
+          <Property Name="calle" Type="varchar" MaxLength="80" />
+          <Property Name="numint" Type="varchar" MaxLength="15" />
+          <Property Name="numext" Type="varchar" MaxLength="15" />
+          <Property Name="colonia" Type="varchar" MaxLength="60" />
+          <Property Name="cp" Type="varchar" MaxLength="5" />
+          <Property Name="ciudad" Type="varchar" MaxLength="60" />
+          <Property Name="municipio" Type="varchar" MaxLength="60" />
+          <Property Name="estado" Type="varchar" MaxLength="60" />
+          <Property Name="pais" Type="varchar" MaxLength="60" />
+          <Property Name="telefono" Type="varchar" MaxLength="25" />
+          <Property Name="email" Type="varchar" MaxLength="100" />
+          <Property Name="obs" Type="varchar" MaxLength="512" />
+          <Property Name="fecha_alta" Type="date" />
+          <Property Name="usuario" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="estaciones">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="numero" Type="nvarchar" MaxLength="16" />
+          <Property Name="nombre" Type="nvarchar" MaxLength="64" />
+          <Property Name="direccion" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="obs" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="id_usuario" Type="int" />
+        </EntityType>
+        <EntityType Name="logs">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_usuario" Type="int" Nullable="false" />
+          <Property Name="direccion_ip" Type="varchar" MaxLength="16" Nullable="false" />
+          <Property Name="host" Type="varchar" MaxLength="64" />
+          <Property Name="fecha" Type="date" Nullable="false" />
+          <Property Name="hora" Type="time" Precision="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="permisos">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="permiso" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="usuarios">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="estatus" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="usuario" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="contrasena" Type="varchar" MaxLength="128" />
+          <Property Name="obs" Type="varchar" MaxLength="45" />
+          <Property Name="fecha_alta" Type="date" />
+        </EntityType>
+        <EntityType Name="usuarios_permisos">
+          <Key>
+            <PropertyRef Name="usuario_id" />
+            <PropertyRef Name="permiso_id" />
+          </Key>
+          <Property Name="usuario_id" Type="int" Nullable="false" />
+          <Property Name="permiso_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vales">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="folio" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="estatus" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="fecha_emision" Type="date" Nullable="false" />
+          <Property Name="fecha_canje" Type="date" />
+          <Property Name="importe" Type="float" Nullable="false" />
+          <Property Name="importe_letra" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="id_cliente" Type="int" Nullable="false" />
+          <Property Name="id_empresa" Type="int" Nullable="false" />
+          <Property Name="id_usuario" Type="int" Nullable="false" />
+          <Property Name="token" Type="varchar" MaxLength="128" />
+          <Property Name="id_estacion" Type="int" />
+          <Property Name="fecha_corte" Type="date" />
+          <Property Name="codigo" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ventas">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="fecha" Type="datetime" Nullable="false" />
+          <Property Name="id_cliente" Type="int" />
+          <Property Name="id_empresa" Type="int" />
+          <Property Name="id_usuario" Type="int" />
+          <Property Name="folioInicio" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="folioFin" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="denominacion" Type="float" Nullable="false" />
+          <Property Name="cantidad" Type="int" Nullable="false" />
+          <Property Name="importe" Type="float" />
+        </EntityType>
+        <Association Name="fk_clientes_usuarios">
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="1" />
+          <End Role="clientes" Type="Self.clientes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="clientes">
+              <PropertyRef Name="usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_clientes_usuarios0">
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="1" />
+          <End Role="empresas" Type="Self.empresas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="empresas">
+              <PropertyRef Name="usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_estaciones_usuarios">
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="0..1" />
+          <End Role="estaciones" Type="Self.estaciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="estaciones">
+              <PropertyRef Name="id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_logs_usuarios1">
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="1" />
+          <End Role="logs" Type="Self.logs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="logs">
+              <PropertyRef Name="id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuarios_permisos_permisos">
+          <End Role="permisos" Type="Self.permisos" Multiplicity="1" />
+          <End Role="usuarios_permisos" Type="Self.usuarios_permisos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="permisos">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="usuarios_permisos">
+              <PropertyRef Name="permiso_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuarios_permisos_usuarios">
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="1" />
+          <End Role="usuarios_permisos" Type="Self.usuarios_permisos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="usuarios_permisos">
+              <PropertyRef Name="usuario_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_vales_clientes1">
+          <End Role="clientes" Type="Self.clientes" Multiplicity="1" />
+          <End Role="vales" Type="Self.vales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="clientes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="vales">
+              <PropertyRef Name="id_cliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_vales_empresas1">
+          <End Role="empresas" Type="Self.empresas" Multiplicity="1" />
+          <End Role="vales" Type="Self.vales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresas">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="vales">
+              <PropertyRef Name="id_empresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_vales_estaciones">
+          <End Role="estaciones" Type="Self.estaciones" Multiplicity="0..1" />
+          <End Role="vales" Type="Self.vales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estaciones">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="vales">
+              <PropertyRef Name="id_estacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_vales_usuarios1">
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="1" />
+          <End Role="vales" Type="Self.vales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="vales">
+              <PropertyRef Name="id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ventas_clientes">
+          <End Role="clientes" Type="Self.clientes" Multiplicity="0..1" />
+          <End Role="ventas" Type="Self.ventas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="clientes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ventas">
+              <PropertyRef Name="id_cliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ventas_empresas">
+          <End Role="empresas" Type="Self.empresas" Multiplicity="0..1" />
+          <End Role="ventas" Type="Self.ventas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresas">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ventas">
+              <PropertyRef Name="id_empresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ventas_usuarios">
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="0..1" />
+          <End Role="ventas" Type="Self.ventas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ventas">
+              <PropertyRef Name="id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ValesRdzDatosModelStoreContainer">
+          <EntitySet Name="clientes" EntityType="Self.clientes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="empresas" EntityType="Self.empresas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="estaciones" EntityType="Self.estaciones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="logs" EntityType="Self.logs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="permisos" EntityType="Self.permisos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="usuarios" EntityType="Self.usuarios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="usuarios_permisos" EntityType="Self.usuarios_permisos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vales" EntityType="Self.vales" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ventas" EntityType="Self.ventas" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="fk_clientes_usuarios" Association="Self.fk_clientes_usuarios">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="clientes" EntitySet="clientes" />
+          </AssociationSet>
+          <AssociationSet Name="fk_clientes_usuarios0" Association="Self.fk_clientes_usuarios0">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="empresas" EntitySet="empresas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_estaciones_usuarios" Association="Self.FK_estaciones_usuarios">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="estaciones" EntitySet="estaciones" />
+          </AssociationSet>
+          <AssociationSet Name="fk_logs_usuarios1" Association="Self.fk_logs_usuarios1">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="logs" EntitySet="logs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuarios_permisos_permisos" Association="Self.FK_usuarios_permisos_permisos">
+            <End Role="permisos" EntitySet="permisos" />
+            <End Role="usuarios_permisos" EntitySet="usuarios_permisos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuarios_permisos_usuarios" Association="Self.FK_usuarios_permisos_usuarios">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="usuarios_permisos" EntitySet="usuarios_permisos" />
+          </AssociationSet>
+          <AssociationSet Name="fk_vales_clientes1" Association="Self.fk_vales_clientes1">
+            <End Role="clientes" EntitySet="clientes" />
+            <End Role="vales" EntitySet="vales" />
+          </AssociationSet>
+          <AssociationSet Name="fk_vales_empresas1" Association="Self.fk_vales_empresas1">
+            <End Role="empresas" EntitySet="empresas" />
+            <End Role="vales" EntitySet="vales" />
+          </AssociationSet>
+          <AssociationSet Name="FK_vales_estaciones" Association="Self.FK_vales_estaciones">
+            <End Role="estaciones" EntitySet="estaciones" />
+            <End Role="vales" EntitySet="vales" />
+          </AssociationSet>
+          <AssociationSet Name="fk_vales_usuarios1" Association="Self.fk_vales_usuarios1">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="vales" EntitySet="vales" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ventas_clientes" Association="Self.FK_ventas_clientes">
+            <End Role="clientes" EntitySet="clientes" />
+            <End Role="ventas" EntitySet="ventas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ventas_empresas" Association="Self.FK_ventas_empresas">
+            <End Role="empresas" EntitySet="empresas" />
+            <End Role="ventas" EntitySet="ventas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ventas_usuarios" Association="Self.FK_ventas_usuarios">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="ventas" EntitySet="ventas" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ValesRdzDatosModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="clientes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="estatus" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="rfc" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="calle" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="numint" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="numext" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="colonia" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="cp" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="ciudad" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="municipio" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="estado" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="pais" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="telefono" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="obs" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+          <Property Name="fecha_alta" Type="DateTime" Precision="0" />
+          <Property Name="usuario" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="usuarios" Relationship="Self.fk_clientes_usuarios" FromRole="clientes" ToRole="usuarios" />
+          <NavigationProperty Name="vales" Relationship="Self.fk_vales_clientes1" FromRole="clientes" ToRole="vales" />
+          <NavigationProperty Name="ventas" Relationship="ValesRdzDatosModel.FK_ventas_clientes" FromRole="clientes" ToRole="ventas" />
+        </EntityType>
+        <EntityType Name="empresas">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="estatus" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="rfc" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="calle" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="numint" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="numext" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="colonia" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="cp" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="ciudad" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="municipio" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="estado" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="pais" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="telefono" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="obs" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+          <Property Name="fecha_alta" Type="DateTime" Precision="0" />
+          <Property Name="usuario" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="usuarios" Relationship="Self.fk_clientes_usuarios0" FromRole="empresas" ToRole="usuarios" />
+          <NavigationProperty Name="vales" Relationship="Self.fk_vales_empresas1" FromRole="empresas" ToRole="vales" />
+          <NavigationProperty Name="ventas" Relationship="ValesRdzDatosModel.FK_ventas_empresas" FromRole="empresas" ToRole="ventas" />
+        </EntityType>
+        <EntityType Name="logs">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_usuario" Type="Int32" Nullable="false" />
+          <Property Name="direccion_ip" Type="String" MaxLength="16" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="host" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="hora" Type="Time" Nullable="false" Precision="0" />
+          <NavigationProperty Name="usuarios" Relationship="Self.fk_logs_usuarios1" FromRole="logs" ToRole="usuarios" />
+        </EntityType>
+        <EntityType Name="usuarios">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="estatus" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="usuario" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="contrasena" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="obs" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="fecha_alta" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="clientes" Relationship="Self.fk_clientes_usuarios" FromRole="usuarios" ToRole="clientes" />
+          <NavigationProperty Name="empresas" Relationship="Self.fk_clientes_usuarios0" FromRole="usuarios" ToRole="empresas" />
+          <NavigationProperty Name="logs" Relationship="Self.fk_logs_usuarios1" FromRole="usuarios" ToRole="logs" />
+          <NavigationProperty Name="vales" Relationship="Self.fk_vales_usuarios1" FromRole="usuarios" ToRole="vales" />
+          <NavigationProperty Name="ventas" Relationship="ValesRdzDatosModel.FK_ventas_usuarios" FromRole="usuarios" ToRole="ventas" />
+          <NavigationProperty Name="estaciones" Relationship="ValesRdzDatosModel.FK_estaciones_usuarios" FromRole="usuarios" ToRole="estaciones" />
+          <NavigationProperty Name="permisos" Relationship="ValesRdzDatosModel.usuarios_permisos" FromRole="usuarios" ToRole="permisos" />
+        </EntityType>
+        <EntityType Name="vales">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="folio" Type="Int32" Nullable="false" />
+          <Property Name="estatus" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="fecha_emision" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="fecha_canje" Type="DateTime" Precision="0" />
+          <Property Name="importe" Type="Double" Nullable="false" />
+          <Property Name="importe_letra" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="id_cliente" Type="Int32" Nullable="false" />
+          <Property Name="id_empresa" Type="Int32" Nullable="false" />
+          <Property Name="id_usuario" Type="Int32" Nullable="false" />
+          <Property Name="token" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="clientes" Relationship="Self.fk_vales_clientes1" FromRole="vales" ToRole="clientes" />
+          <NavigationProperty Name="empresas" Relationship="Self.fk_vales_empresas1" FromRole="vales" ToRole="empresas" />
+          <NavigationProperty Name="usuarios" Relationship="Self.fk_vales_usuarios1" FromRole="vales" ToRole="usuarios" />
+          <Property Name="id_estacion" Type="Int32" />
+          <NavigationProperty Name="estaciones" Relationship="ValesRdzDatosModel.FK_vales_estaciones" FromRole="vales" ToRole="estaciones" />
+          <Property Name="fecha_corte" Type="DateTime" Precision="0" />
+          <Property Name="codigo" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="fk_clientes_usuarios">
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="1" />
+          <End Role="clientes" Type="Self.clientes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="clientes">
+              <PropertyRef Name="usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_vales_clientes1">
+          <End Role="clientes" Type="Self.clientes" Multiplicity="1" />
+          <End Role="vales" Type="Self.vales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="clientes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="vales">
+              <PropertyRef Name="id_cliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_clientes_usuarios0">
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="1" />
+          <End Role="empresas" Type="Self.empresas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="empresas">
+              <PropertyRef Name="usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_vales_empresas1">
+          <End Role="empresas" Type="Self.empresas" Multiplicity="1" />
+          <End Role="vales" Type="Self.vales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresas">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="vales">
+              <PropertyRef Name="id_empresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_logs_usuarios1">
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="1" />
+          <End Role="logs" Type="Self.logs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="logs">
+              <PropertyRef Name="id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_vales_usuarios1">
+          <End Role="usuarios" Type="Self.usuarios" Multiplicity="1" />
+          <End Role="vales" Type="Self.vales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="vales">
+              <PropertyRef Name="id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ValesRdzDatosEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="clientes" EntityType="Self.clientes" />
+          <EntitySet Name="empresas" EntityType="Self.empresas" />
+          <EntitySet Name="logs" EntityType="Self.logs" />
+          <EntitySet Name="usuarios" EntityType="Self.usuarios" />
+          <EntitySet Name="vales" EntityType="Self.vales" />
+          <AssociationSet Name="fk_clientes_usuarios" Association="Self.fk_clientes_usuarios">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="clientes" EntitySet="clientes" />
+          </AssociationSet>
+          <AssociationSet Name="fk_vales_clientes1" Association="Self.fk_vales_clientes1">
+            <End Role="clientes" EntitySet="clientes" />
+            <End Role="vales" EntitySet="vales" />
+          </AssociationSet>
+          <AssociationSet Name="fk_clientes_usuarios0" Association="Self.fk_clientes_usuarios0">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="empresas" EntitySet="empresas" />
+          </AssociationSet>
+          <AssociationSet Name="fk_vales_empresas1" Association="Self.fk_vales_empresas1">
+            <End Role="empresas" EntitySet="empresas" />
+            <End Role="vales" EntitySet="vales" />
+          </AssociationSet>
+          <AssociationSet Name="fk_logs_usuarios1" Association="Self.fk_logs_usuarios1">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="logs" EntitySet="logs" />
+          </AssociationSet>
+          <AssociationSet Name="fk_vales_usuarios1" Association="Self.fk_vales_usuarios1">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="vales" EntitySet="vales" />
+          </AssociationSet>
+          <EntitySet Name="ventas" EntityType="ValesRdzDatosModel.ventas" />
+          <AssociationSet Name="FK_ventas_clientes" Association="ValesRdzDatosModel.FK_ventas_clientes">
+            <End Role="clientes" EntitySet="clientes" />
+            <End Role="ventas" EntitySet="ventas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ventas_empresas" Association="ValesRdzDatosModel.FK_ventas_empresas">
+            <End Role="empresas" EntitySet="empresas" />
+            <End Role="ventas" EntitySet="ventas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ventas_usuarios" Association="ValesRdzDatosModel.FK_ventas_usuarios">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="ventas" EntitySet="ventas" />
+          </AssociationSet>
+          <EntitySet Name="estaciones" EntityType="ValesRdzDatosModel.estaciones" />
+          <AssociationSet Name="FK_estaciones_usuarios" Association="ValesRdzDatosModel.FK_estaciones_usuarios">
+            <End Role="usuarios" EntitySet="usuarios" />
+            <End Role="estaciones" EntitySet="estaciones" />
+          </AssociationSet>
+          <AssociationSet Name="FK_vales_estaciones" Association="ValesRdzDatosModel.FK_vales_estaciones">
+            <End Role="estaciones" EntitySet="estaciones" />
+            <End Role="vales" EntitySet="vales" />
+          </AssociationSet>
+          <EntitySet Name="permisos" EntityType="ValesRdzDatosModel.permisos" />
+          <AssociationSet Name="usuarios_permisos" Association="ValesRdzDatosModel.usuarios_permisos">
+            <End Role="permisos" EntitySet="permisos" />
+            <End Role="usuarios" EntitySet="usuarios" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ventas">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="folioInicio" Type="Int32" Nullable="false" />
+          <Property Name="folioFin" Type="Int32" Nullable="false" />
+          <Property Name="fecha" Type="DateTime" Precision="3" Nullable="false" />
+          <Property Name="id_cliente" Type="Int32" />
+          <Property Name="id_empresa" Type="Int32" />
+          <Property Name="id_usuario" Type="Int32" />
+          <NavigationProperty Name="clientes" Relationship="ValesRdzDatosModel.FK_ventas_clientes" FromRole="ventas" ToRole="clientes" />
+          <NavigationProperty Name="empresas" Relationship="ValesRdzDatosModel.FK_ventas_empresas" FromRole="ventas" ToRole="empresas" />
+          <NavigationProperty Name="usuarios" Relationship="ValesRdzDatosModel.FK_ventas_usuarios" FromRole="ventas" ToRole="usuarios" />
+          <Property Name="denominacion" Type="Double" Nullable="false" />
+          <Property Name="cantidad" Type="Int32" Nullable="false" />
+          <Property Name="importe" Type="Double" />
+        </EntityType>
+        <Association Name="FK_ventas_clientes">
+          <End Type="ValesRdzDatosModel.clientes" Role="clientes" Multiplicity="0..1" />
+          <End Type="ValesRdzDatosModel.ventas" Role="ventas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="clientes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ventas">
+              <PropertyRef Name="id_cliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ventas_empresas">
+          <End Type="ValesRdzDatosModel.empresas" Role="empresas" Multiplicity="0..1" />
+          <End Type="ValesRdzDatosModel.ventas" Role="ventas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="empresas">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ventas">
+              <PropertyRef Name="id_empresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ventas_usuarios">
+          <End Type="ValesRdzDatosModel.usuarios" Role="usuarios" Multiplicity="0..1" />
+          <End Type="ValesRdzDatosModel.ventas" Role="ventas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ventas">
+              <PropertyRef Name="id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="estaciones">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="numero" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="nombre" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="direccion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="obs" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="id_usuario" Type="Int32" />
+          <NavigationProperty Name="usuarios" Relationship="ValesRdzDatosModel.FK_estaciones_usuarios" FromRole="estaciones" ToRole="usuarios" />
+          <NavigationProperty Name="vales" Relationship="ValesRdzDatosModel.FK_vales_estaciones" FromRole="estaciones" ToRole="vales" />
+        </EntityType>
+        <Association Name="FK_estaciones_usuarios">
+          <End Type="ValesRdzDatosModel.usuarios" Role="usuarios" Multiplicity="0..1" />
+          <End Type="ValesRdzDatosModel.estaciones" Role="estaciones" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuarios">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="estaciones">
+              <PropertyRef Name="id_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_vales_estaciones">
+          <End Type="ValesRdzDatosModel.estaciones" Role="estaciones" Multiplicity="0..1" />
+          <End Type="ValesRdzDatosModel.vales" Role="vales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estaciones">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="vales">
+              <PropertyRef Name="id_estacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="permisos">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="permiso" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="usuarios" Relationship="ValesRdzDatosModel.usuarios_permisos" FromRole="permisos" ToRole="usuarios" />
+        </EntityType>
+        <Association Name="usuarios_permisos">
+          <End Type="ValesRdzDatosModel.permisos" Role="permisos" Multiplicity="*" />
+          <End Type="ValesRdzDatosModel.usuarios" Role="usuarios" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ValesRdzDatosModelStoreContainer" CdmEntityContainer="ValesRdzDatosEntities">
+          <EntitySetMapping Name="clientes">
+            <EntityTypeMapping TypeName="ValesRdzDatosModel.clientes">
+              <MappingFragment StoreEntitySet="clientes">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="estatus" ColumnName="estatus" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="rfc" ColumnName="rfc" />
+                <ScalarProperty Name="calle" ColumnName="calle" />
+                <ScalarProperty Name="numint" ColumnName="numint" />
+                <ScalarProperty Name="numext" ColumnName="numext" />
+                <ScalarProperty Name="colonia" ColumnName="colonia" />
+                <ScalarProperty Name="cp" ColumnName="cp" />
+                <ScalarProperty Name="ciudad" ColumnName="ciudad" />
+                <ScalarProperty Name="municipio" ColumnName="municipio" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="pais" ColumnName="pais" />
+                <ScalarProperty Name="telefono" ColumnName="telefono" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="obs" ColumnName="obs" />
+                <ScalarProperty Name="fecha_alta" ColumnName="fecha_alta" />
+                <ScalarProperty Name="usuario" ColumnName="usuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="empresas">
+            <EntityTypeMapping TypeName="ValesRdzDatosModel.empresas">
+              <MappingFragment StoreEntitySet="empresas">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="estatus" ColumnName="estatus" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="rfc" ColumnName="rfc" />
+                <ScalarProperty Name="calle" ColumnName="calle" />
+                <ScalarProperty Name="numint" ColumnName="numint" />
+                <ScalarProperty Name="numext" ColumnName="numext" />
+                <ScalarProperty Name="colonia" ColumnName="colonia" />
+                <ScalarProperty Name="cp" ColumnName="cp" />
+                <ScalarProperty Name="ciudad" ColumnName="ciudad" />
+                <ScalarProperty Name="municipio" ColumnName="municipio" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="pais" ColumnName="pais" />
+                <ScalarProperty Name="telefono" ColumnName="telefono" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="obs" ColumnName="obs" />
+                <ScalarProperty Name="fecha_alta" ColumnName="fecha_alta" />
+                <ScalarProperty Name="usuario" ColumnName="usuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="logs">
+            <EntityTypeMapping TypeName="ValesRdzDatosModel.logs">
+              <MappingFragment StoreEntitySet="logs">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
+                <ScalarProperty Name="direccion_ip" ColumnName="direccion_ip" />
+                <ScalarProperty Name="host" ColumnName="host" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="hora" ColumnName="hora" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="usuarios">
+            <EntityTypeMapping TypeName="ValesRdzDatosModel.usuarios">
+              <MappingFragment StoreEntitySet="usuarios">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="estatus" ColumnName="estatus" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="usuario" ColumnName="usuario" />
+                <ScalarProperty Name="contrasena" ColumnName="contrasena" />
+                <ScalarProperty Name="obs" ColumnName="obs" />
+                <ScalarProperty Name="fecha_alta" ColumnName="fecha_alta" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vales">
+            <EntityTypeMapping TypeName="ValesRdzDatosModel.vales">
+              <MappingFragment StoreEntitySet="vales">
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="fecha_corte" ColumnName="fecha_corte" />
+                <ScalarProperty Name="id_estacion" ColumnName="id_estacion" />
+                <ScalarProperty Name="folio" ColumnName="folio" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="estatus" ColumnName="estatus" />
+                <ScalarProperty Name="fecha_emision" ColumnName="fecha_emision" />
+                <ScalarProperty Name="fecha_canje" ColumnName="fecha_canje" />
+                <ScalarProperty Name="importe" ColumnName="importe" />
+                <ScalarProperty Name="importe_letra" ColumnName="importe_letra" />
+                <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
+                <ScalarProperty Name="id_empresa" ColumnName="id_empresa" />
+                <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
+                <ScalarProperty Name="token" ColumnName="token" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ventas">
+            <EntityTypeMapping TypeName="ValesRdzDatosModel.ventas">
+              <MappingFragment StoreEntitySet="ventas">
+                <ScalarProperty Name="folioFin" ColumnName="folioFin" />
+                <ScalarProperty Name="folioInicio" ColumnName="folioInicio" />
+                <ScalarProperty Name="importe" ColumnName="importe" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="denominacion" ColumnName="denominacion" />
+                <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
+                <ScalarProperty Name="id_empresa" ColumnName="id_empresa" />
+                <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="estaciones">
+            <EntityTypeMapping TypeName="ValesRdzDatosModel.estaciones">
+              <MappingFragment StoreEntitySet="estaciones">
+                <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
+                <ScalarProperty Name="obs" ColumnName="obs" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="numero" ColumnName="numero" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="permisos">
+            <EntityTypeMapping TypeName="ValesRdzDatosModel.permisos">
+              <MappingFragment StoreEntitySet="permisos">
+                <ScalarProperty Name="permiso" ColumnName="permiso" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="usuarios_permisos" TypeName="ValesRdzDatosModel.usuarios_permisos" StoreEntitySet="usuarios_permisos">
+            <EndProperty Name="usuarios">
+              <ScalarProperty Name="id" ColumnName="usuario_id" />
+            </EndProperty>
+            <EndProperty Name="permisos">
+              <ScalarProperty Name="id" ColumnName="permiso_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

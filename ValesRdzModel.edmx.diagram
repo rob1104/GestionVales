@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="cab6db8142cd483abe8669bb3723706c" Name="Diagram1" ZoomLevel="91">
+        <EntityTypeShape EntityType="ValesRdzDatosModel.clientes" Width="1.5" PointX="3" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ValesRdzDatosModel.empresas" Width="1.5" PointX="3" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ValesRdzDatosModel.logs" Width="1.5" PointX="3" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ValesRdzDatosModel.usuarios" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ValesRdzDatosModel.vales" Width="1.5" PointX="5.25" PointY="4.875" IsExpanded="true" />
+        <AssociationConnector Association="ValesRdzDatosModel.fk_clientes_usuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="ValesRdzDatosModel.fk_vales_clientes1" ManuallyRouted="false" />
+        <AssociationConnector Association="ValesRdzDatosModel.fk_clientes_usuarios0" ManuallyRouted="false" />
+        <AssociationConnector Association="ValesRdzDatosModel.fk_vales_empresas1" ManuallyRouted="false" />
+        <AssociationConnector Association="ValesRdzDatosModel.fk_logs_usuarios1" ManuallyRouted="false" />
+        <AssociationConnector Association="ValesRdzDatosModel.fk_vales_usuarios1" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ValesRdzDatosModel.ventas" Width="1.5" PointX="6.125" PointY="0.5" />
+        <AssociationConnector Association="ValesRdzDatosModel.FK_ventas_clientes" />
+        <AssociationConnector Association="ValesRdzDatosModel.FK_ventas_empresas" />
+        <AssociationConnector Association="ValesRdzDatosModel.FK_ventas_usuarios" />
+        <EntityTypeShape EntityType="ValesRdzDatosModel.estaciones" Width="1.5" PointX="3" PointY="16.25" />
+        <AssociationConnector Association="ValesRdzDatosModel.FK_estaciones_usuarios" />
+        <AssociationConnector Association="ValesRdzDatosModel.FK_vales_estaciones" />
+        <EntityTypeShape EntityType="ValesRdzDatosModel.permisos" Width="1.5" PointX="11.25" PointY="3.75" />
+        <AssociationConnector Association="ValesRdzDatosModel.usuarios_permisos" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
