@@ -36,6 +36,7 @@
             this.btnAceptar = new DevExpress.XtraEditors.SimpleButton();
             this.label1 = new System.Windows.Forms.Label();
             this.btnProbar = new DevExpress.XtraEditors.SimpleButton();
+            this.btnRestore = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtServidor.Properties)).BeginInit();
@@ -105,12 +106,21 @@
             // 
             // btnProbar
             // 
-            this.btnProbar.Location = new System.Drawing.Point(15, 162);
+            this.btnProbar.Location = new System.Drawing.Point(131, 163);
             this.btnProbar.Name = "btnProbar";
             this.btnProbar.Size = new System.Drawing.Size(92, 30);
             this.btnProbar.TabIndex = 5;
             this.btnProbar.Text = "Probar conexión";
             this.btnProbar.Click += new System.EventHandler(this.btnProbar_Click);
+            // 
+            // btnRestore
+            // 
+            this.btnRestore.Location = new System.Drawing.Point(15, 163);
+            this.btnRestore.Name = "btnRestore";
+            this.btnRestore.Size = new System.Drawing.Size(84, 30);
+            this.btnRestore.TabIndex = 6;
+            this.btnRestore.Text = "Restaurar";
+            this.btnRestore.Click += new System.EventHandler(this.btnRestore_Click);
             // 
             // FrmBaseDatos
             // 
@@ -118,6 +128,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(325, 205);
+            this.Controls.Add(this.btnRestore);
             this.Controls.Add(this.btnProbar);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnAceptar);
@@ -148,5 +159,6 @@
         private DevExpress.XtraEditors.SimpleButton btnAceptar;
         private System.Windows.Forms.Label label1;
         private DevExpress.XtraEditors.SimpleButton btnProbar;
+        private DevExpress.XtraEditors.SimpleButton btnRestore;
     }
 }

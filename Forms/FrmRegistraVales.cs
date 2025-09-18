@@ -7,6 +7,7 @@ using System.Data.Entity.Validation;
 using System.Data.Entity.Infrastructure;
 using DevExpress.DataAccess.Sql;
 using System.Security.Cryptography;
+using GestionValesRdz.Servicios;
 
 namespace GestionValesRdz.Forms
 {
@@ -168,17 +169,51 @@ namespace GestionValesRdz.Forms
             DialogResult r = XtraMessageBox.Show(string.Format("¿Seguro que desea generar los vales caputrados?"), "Verificar datos", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
             if (r == DialogResult.Yes)
             {
-                GuardaEnBase();
-                GeneraVenta();
-                if (lv.Items.Count == 0)
+                try
                 {
-                    XtraMessageBox.Show("Rango de vales incorrecto, especifique un nuevo rango", "Vales", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return;
+                    GuardaEnBase();
+                    GeneraVenta();
+                    if (lv.Items.Count == 0)
+                    {
+                        XtraMessageBox.Show("Rango de vales incorrecto, especifique un nuevo rango", "Vales", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
+
+                    var printJob = new PrintJob
+                    {
+                        JobName = $"Vales del folio {txtFolioInicial.Text}",
+                        StartFolio = Convert.ToInt32(txtFolioInicial.Text),
+                        TotalVales = GetTotalValesToPrint(),
+                        ConnectionString = string.Format(@"XpoProvider=MSSqlServer;data source={0};initial catalog={1};User Id=sa;Password=9753186400;",
+                            Properties.Settings.Default.servidor, Properties.Settings.Default.basedatos)
+                    };
+                    PrintingService.Instance.AddPrintJob(printJob);
+                    NotificadorDatos.AnunciarCambio();
+                    XtraMessageBox.Show("Los vales se han agregado a la impresora y se imprimirán en segundo plano. Puede cerrar esta ventana y continuar trabajando",
+                        "Impresión en Curso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    //Imprime();                
+                    btnGuardar.Enabled = false;
+                    Close();
                 }
-                Imprime();                
-                btnGuardar.Enabled = false;
-                Dispose();
+                catch (Exception ex)
+                {
+                    XtraMessageBox.Show($"Error al generar vales: {ex.Message}", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    btnGuardar.Enabled = true;
+                }                
             }
+        }
+
+        private int GetTotalValesToPrint()
+        {
+            if (tc.SelectedIndex == 0)
+                return Convert.ToInt32(txtCantidad.Text);
+            else
+                return Convert.ToInt32(txtCantidad50.Text) +
+                       Convert.ToInt32(txtCantidad100.Text) +
+                       Convert.ToInt32(txtCantidad200.Text) +
+                       Convert.ToInt32(txtCantidad500.Text);
         }
 
         private void GeneraVenta()
@@ -601,6 +636,11 @@ namespace GestionValesRdz.Forms
         private void txtCantidad_Leave(object sender, EventArgs e)
         {
             CalculaCantidadVales();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+
         }
     }
 }

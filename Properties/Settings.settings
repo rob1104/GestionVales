@@ -11,5 +11,8 @@
     <Setting Name="tema" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="AnioFiltroVales" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2025</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

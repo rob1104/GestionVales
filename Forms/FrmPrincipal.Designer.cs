@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPrincipal));
             DevExpress.Utils.SuperToolTip superToolTip1 = new DevExpress.Utils.SuperToolTip();
             DevExpress.Utils.ToolTipTitleItem toolTipTitleItem1 = new DevExpress.Utils.ToolTipTitleItem();
@@ -78,6 +79,8 @@
             this.btnRptInd = new DevExpress.XtraBars.BarButtonItem();
             this.btnPermisos = new DevExpress.XtraBars.BarButtonItem();
             this.btnValesPendientes = new DevExpress.XtraBars.BarButtonItem();
+            this.btnRespaldoBase = new DevExpress.XtraBars.BarButtonItem();
+            this.btnRestaurarBase = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -93,6 +96,10 @@
             this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem4 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem5 = new DevExpress.XtraBars.BarButtonItem();
+            this.timerImpresion = new System.Windows.Forms.Timer(this.components);
+            this.barButtonItem6 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem7 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem8 = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -125,9 +132,11 @@
             this.btnValesPorEstacion,
             this.btnRptInd,
             this.btnPermisos,
-            this.btnValesPendientes});
+            this.btnValesPendientes,
+            this.btnRespaldoBase,
+            this.btnRestaurarBase});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 27;
+            this.ribbonControl1.MaxItemId = 29;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1,
@@ -400,6 +409,30 @@
             this.btnValesPendientes.SuperTip = superToolTip8;
             this.btnValesPendientes.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnValesPendientes_ItemClick);
             // 
+            // btnRespaldoBase
+            // 
+            this.btnRespaldoBase.Caption = "Respaldar Información";
+            this.btnRespaldoBase.Hint = "Respalda la información de la base de dats en un archivo para guardar en su equip" +
+    "o.";
+            this.btnRespaldoBase.Id = 27;
+            this.btnRespaldoBase.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnRespaldoBase.ImageOptions.Image")));
+            this.btnRespaldoBase.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btnRespaldoBase.ImageOptions.LargeImage")));
+            this.btnRespaldoBase.Name = "btnRespaldoBase";
+            this.btnRespaldoBase.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.btnRespaldoBase.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnRespaldoBase_ItemClick);
+            // 
+            // btnRestaurarBase
+            // 
+            this.btnRestaurarBase.Caption = "Restaurar Información";
+            this.btnRestaurarBase.Hint = "Restaura la información de un archivo guardado en su equipo.";
+            this.btnRestaurarBase.Id = 28;
+            this.btnRestaurarBase.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnRestaurarBase.ImageOptions.Image")));
+            this.btnRestaurarBase.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btnRestaurarBase.ImageOptions.LargeImage")));
+            this.btnRestaurarBase.Name = "btnRestaurarBase";
+            this.btnRestaurarBase.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.btnRestaurarBase.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+            this.btnRestaurarBase.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnRestaurarBase_ItemClick);
+            // 
             // ribbonPage1
             // 
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -481,6 +514,8 @@
             this.ribbonPageGroup2.ItemLinks.Add(this.btnBaseDatos);
             this.ribbonPageGroup2.ItemLinks.Add(this.btnTemas);
             this.ribbonPageGroup2.ItemLinks.Add(this.barButtonItem3);
+            this.ribbonPageGroup2.ItemLinks.Add(this.btnRespaldoBase);
+            this.ribbonPageGroup2.ItemLinks.Add(this.btnRestaurarBase);
             this.ribbonPageGroup2.Name = "ribbonPageGroup2";
             this.ribbonPageGroup2.Text = "GENERAL";
             // 
@@ -530,6 +565,42 @@
             this.barButtonItem5.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem5.ImageOptions.LargeImage")));
             this.barButtonItem5.Name = "barButtonItem5";
             // 
+            // timerImpresion
+            // 
+            this.timerImpresion.Enabled = true;
+            this.timerImpresion.Interval = 3000;
+            this.timerImpresion.Tick += new System.EventHandler(this.timerImpresion_Tick);
+            // 
+            // barButtonItem6
+            // 
+            this.barButtonItem6.Caption = "Respaldar Información";
+            this.barButtonItem6.Hint = "Respalda la información de la base de dats en un archivo para guardar en su equip" +
+    "o.";
+            this.barButtonItem6.Id = 27;
+            this.barButtonItem6.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem6.ImageOptions.Image")));
+            this.barButtonItem6.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem6.ImageOptions.LargeImage")));
+            this.barButtonItem6.Name = "barButtonItem6";
+            // 
+            // barButtonItem7
+            // 
+            this.barButtonItem7.Caption = "Respaldar Información";
+            this.barButtonItem7.Hint = "Respalda la información de la base de dats en un archivo para guardar en su equip" +
+    "o.";
+            this.barButtonItem7.Id = 27;
+            this.barButtonItem7.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem7.ImageOptions.Image")));
+            this.barButtonItem7.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem7.ImageOptions.LargeImage")));
+            this.barButtonItem7.Name = "barButtonItem7";
+            // 
+            // barButtonItem8
+            // 
+            this.barButtonItem8.Caption = "Respaldar Información";
+            this.barButtonItem8.Hint = "Respalda la información de la base de dats en un archivo para guardar en su equip" +
+    "o.";
+            this.barButtonItem8.Id = 27;
+            this.barButtonItem8.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem8.ImageOptions.Image")));
+            this.barButtonItem8.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("barButtonItem8.ImageOptions.LargeImage")));
+            this.barButtonItem8.Name = "barButtonItem8";
+            // 
             // FrmPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -541,7 +612,7 @@
             this.IsMdiContainer = true;
             this.Name = "FrmPrincipal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Sistema gestión de vales de gasolina";
+            this.Text = "Sistema gestión de vales de gasolina 1.2.0.1";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmPrincipal_FormClosed);
             this.Load += new System.EventHandler(this.FrmPrincipal_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
@@ -592,5 +663,11 @@
         private DevExpress.XtraBars.BarButtonItem barButtonItem1;
         private DevExpress.XtraBars.BarButtonItem barButtonItem4;
         private DevExpress.XtraBars.BarButtonItem barButtonItem5;
+        private System.Windows.Forms.Timer timerImpresion;
+        private DevExpress.XtraBars.BarButtonItem btnRespaldoBase;
+        private DevExpress.XtraBars.BarButtonItem btnRestaurarBase;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem6;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem7;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem8;
     }
 }

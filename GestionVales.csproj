@@ -131,6 +131,8 @@
   <ItemGroup>
     <Compile Include="Auth.cs" />
     <Compile Include="AyudanteDeConexion.cs" />
+    <Compile Include="NotificarDatos.cs" />
+    <Compile Include="Servicios\PrintingService.cs" />
     <Compile Include="clientes.cs">
       <DependentUpon>ValesRdzModel.tt</DependentUpon>
     </Compile>
@@ -493,6 +495,8 @@
     <Content Include="gas.ico" />
     <None Include="Resources\cancel24.png" />
     <None Include="Resources\20-20-711552e87a53b088e7544040d3c64db7-backup.png" />
+    <None Include="Resources\logot1.png" />
+    <None Include="Resources\logoo %28Custom%29 %282%29.png" />
     <Content Include="ValesRdzModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>ValesRdzModel.edmx</DependentUpon>
@@ -514,6 +518,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

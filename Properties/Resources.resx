@@ -121,13 +121,19 @@
   <data name="cancel24" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\cancel24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="logot1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logot1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="delete24" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\delete24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="20-20-711552e87a53b088e7544040d3c64db7-backup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\20-20-711552e87a53b088e7544040d3c64db7-backup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="edit24" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\edit24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="20-20-711552e87a53b088e7544040d3c64db7-backup" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\20-20-711552e87a53b088e7544040d3c64db7-backup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="logoo (Custom) (2)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\logoo (Custom) (2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

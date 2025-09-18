@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity.Validation;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -159,9 +160,7 @@ namespace GestionValesRdz.Forms
             new FrmBaseDatos().ShowDialog();
         }
 
-        private void lblVersion_Click(object sender, EventArgs e)
-        {
-            new FrmBaseDatos().ShowDialog();
-        }
+        
+
     }
 }

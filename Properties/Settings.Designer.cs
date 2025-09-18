@@ -58,5 +58,17 @@ namespace GestionValesRdz.Properties {
                 this["tema"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2025")]
+        public int AnioFiltroVales {
+            get {
+                return ((int)(this["AnioFiltroVales"]));
+            }
+            set {
+                this["AnioFiltroVales"] = value;
+            }
+        }
     }
 }

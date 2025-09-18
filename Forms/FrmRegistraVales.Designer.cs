@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.txtCantidad = new DevExpress.XtraEditors.SpinEdit();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.txtFolioInicial = new DevExpress.XtraEditors.TextEdit();
@@ -89,6 +90,7 @@
             this.txtHasta50 = new DevExpress.XtraEditors.TextEdit();
             this.labelControl8 = new DevExpress.XtraEditors.LabelControl();
             this.txtDesde50 = new DevExpress.XtraEditors.TextEdit();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.txtCantidad.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtFolioInicial.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtFolioFinal.Properties)).BeginInit();
@@ -751,6 +753,10 @@
             this.txtDesde50.Size = new System.Drawing.Size(77, 20);
             this.txtDesde50.TabIndex = 8;
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // FrmRegistraVales
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -865,5 +871,6 @@
         private DevExpress.XtraEditors.TextEdit txtCantidad100;
         private DevExpress.XtraEditors.LabelControl labelControl23;
         private DevExpress.XtraEditors.TextEdit txtCantidad50;
+        private System.Windows.Forms.Timer timer1;
     }
 }

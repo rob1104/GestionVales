@@ -32,7 +32,8 @@ namespace GestionValesRdz.Forms
             vale.fecha_corte = Convert.ToDateTime(dtFecha.EditValue);
             Program.Contexto.SaveChanges();
             XtraMessageBox.Show("Fecha cambiada correctamente");
-            Dispose();
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }
