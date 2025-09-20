@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.Core.EntityClient;
+﻿using System.Configuration;
+using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
 
 namespace GestionValesRdz
@@ -39,6 +40,24 @@ namespace GestionValesRdz
         public static ValesRdzDatosEntities CreareConexion(string dataSource, string baseDatos)
         {
             return new ValesRdzDatosEntities(CrearCadenaDeConexion(dataSource, baseDatos));
+        }
+
+        public static ValesRdzDatosEntities CrearContexto()
+        {
+            // 1. Lee la plantilla de la cadena de conexión desde App.config
+            string plantilla = ConfigurationManager.ConnectionStrings["ValesRdzDatosEntities"].ConnectionString;
+
+            // 2. Obtiene los valores guardados en la configuración del usuario
+            string servidor = Properties.Settings.Default.servidor;
+            string baseDeDatos = Properties.Settings.Default.basedatos;
+            string usuario = "sa"; // Puedes poner esto en los settings si quieres
+            string password = "9753186400"; // Considera manejar esto de forma más segura
+
+            // 3. Construye la cadena de conexión final reemplazando los valores
+            string connectionStringFinal = string.Format(plantilla, servidor, baseDeDatos, usuario, password);
+
+            // 4. Crea y devuelve una nueva instancia del contexto con la conexión correcta
+            return new ValesRdzDatosEntities(connectionStringFinal, true);
         }
     }
 }

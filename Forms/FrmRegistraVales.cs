@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
@@ -8,6 +9,7 @@ using System.Data.Entity.Infrastructure;
 using DevExpress.DataAccess.Sql;
 using System.Security.Cryptography;
 using GestionValesRdz.Servicios;
+using DevExpress.DataProcessing;
 
 namespace GestionValesRdz.Forms
 {
@@ -189,8 +191,8 @@ namespace GestionValesRdz.Forms
                     };
                     PrintingService.Instance.AddPrintJob(printJob);
                     NotificadorDatos.AnunciarCambio();
-                    XtraMessageBox.Show("Los vales se han agregado a la impresora y se imprimirán en segundo plano. Puede cerrar esta ventana y continuar trabajando",
-                        "Impresión en Curso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //XtraMessageBox.Show("Los vales se han agregado a la impresora y se imprimirán en segundo plano. Puede cerrar esta ventana y continuar trabajando",
+                      //  "Impresión en Curso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     //Imprime();                
                     btnGuardar.Enabled = false;
@@ -271,30 +273,61 @@ namespace GestionValesRdz.Forms
         {
             try
             {
-                var misVales = Program.Contexto.vales.ToList();
-                bool agrega;
-                for (int i = Convert.ToInt32(txtFolioInicial.Text); i <= Convert.ToInt32(txtFolioFinal.Text); i++)
+                int folioInicial = Convert.ToInt32(txtFolioInicial.Text);
+                int folioFinal = Convert.ToInt32(txtFolioFinal.Text);
+
+                // 1. Preguntamos a la base de datos SÓLO por los folios que nos interesan y que ya existen.
+                // Es una consulta súper rápida y eficiente.
+                using (var contexto = AyudanteDeConexion.CrearContexto())
                 {
-                    agrega = true;
-                    foreach (var valee in misVales)
+                    var foliosExistentes = contexto.vales
+                        .Where(v => v.folio >= folioInicial && v.folio <= folioFinal)
+                        .Select(v => v.folio) // Solo nos interesa el número de folio, no el objeto completo
+                        .ToHashSet(); // Usamos un HashSet para búsquedas en memoria casi instantáneas.
+
+                    // 2. Si se encontraron folios existentes, notificamos al usuario DE UNA SOLA VEZ.
+                    if (foliosExistentes.Any())
                     {
-                        if (valee.folio == i)
+                        // Unimos los números de folio en un solo string para un mensaje claro.
+                        string foliosRepetidos = string.Join(", ", foliosExistentes);
+                        XtraMessageBox.Show($"Los siguientes folios ya existen y no se agregarán:\n{foliosRepetidos}",
+                                            "Folios Duplicados", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+
+                    // 3. Optimizamos la actualización del ListView para que sea más rápida.
+                    lv.BeginUpdate(); // Detiene el redibujado del control
+
+                    var nuevosItems = new List<ListViewItem>();
+
+                    // 4. Recorremos el rango deseado y agregamos solo los que NO existen.
+                    for (int i = folioInicial; i <= folioFinal; i++)
+                    {
+                        // La comprobación 'foliosExistentes.Contains(i)' es extremadamente rápida.
+                        if (!foliosExistentes.Contains(i) && !lv.Items.ContainsKey(i.ToString()))
                         {
-                            XtraMessageBox.Show(string.Format("El vale {0} ya ha sido generado anteriormente, verifique", i), "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                            agrega = false;
-                            break;
+                            // Creamos el item pero no lo agregamos directamente al ListView todavía
+                            ListViewItem item = new ListViewItem(i.ToString()) { Name = i.ToString() };
+                            item.SubItems.Add(cmbEmpresa.Text);
+                            item.SubItems.Add(cmbCliente.Text);
+                            item.SubItems.Add(Convert.ToDouble(txtImporte.Text).ToString("C")); // Formato de moneda
+                            item.SubItems.Add(cmbEmpresa.EditValue.ToString());
+                            item.SubItems.Add(cmbCliente.EditValue.ToString());
+                            item.SubItems.Add(StringAleatorio(12)); // Asumo que tienes este método
+                            nuevosItems.Add(item);
                         }
                     }
-                    if (!lv.Items.ContainsKey(i.ToString()) && agrega)
-                        AgregarVale(i.ToString(), cmbEmpresa.Text, cmbCliente.Text, Convert.ToDouble(txtImporte.Text), cmbEmpresa.EditValue.ToString(), cmbCliente.EditValue.ToString());
+
+                    // Agregamos todos los nuevos items al ListView de una sola vez.
+                    lv.Items.AddRange(nuevosItems.ToArray());
+
+                    lv.EndUpdate(); // Reactiva el redibujado del control, mostrando todo al instante.
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
-                
+                XtraMessageBox.Show($"Ocurrió un error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-           
+
         }
 
         private void AgregaMultiples()
@@ -411,46 +444,117 @@ namespace GestionValesRdz.Forms
 
         private void GuardaEnBase()
         {
-            try
+            lv.Items.Clear();
+
+            // 1. Creamos una lista para almacenar todos los nuevos vales en memoria.
+            var listaNuevosVales = new List<vales>();
+            int folioActual = Convert.ToInt32(txtFolioInicial.Text);
+
+            // Datos comunes para todos los vales que se van a crear.
+            int idEmpresa = Convert.ToInt32(cmbEmpresa.EditValue);
+            int idCliente = Convert.ToInt32(cmbCliente.EditValue);
+            DateTime fecha = DateTime.Now;
+            int idUsuario = Auth.Id;
+
+            lv.BeginUpdate(); // Pausamos el redibujado del ListView para máxima velocidad.
+
+            if (tc.SelectedIndex == 0) // Pestaña "Por Cantidad"
             {
-                foreach (ListViewItem vale in lv.Items)
-                {
-                    Guid g = Guid.NewGuid();
-                    vales miVale = new vales()
+                int cantidad = Convert.ToInt32(txtCantidad.Text);
+                double monto = Convert.ToDouble(txtImporte.Text);
+
+                for (int i = 0; i < cantidad; i++)
+                {                    
+                    var nuevoVale = new vales
                     {
-                        folio = Convert.ToInt32(vale.Text),
-                        importe = Convert.ToDouble(vale.SubItems[3].Text),
-                        importe_letra = NumerosALetras.Convertir(vale.SubItems[3].Text, true),
-                        fecha_emision = DateTime.Now,
-                        id_cliente = Convert.ToInt32(cmbCliente.EditValue),
-                        id_empresa = Convert.ToInt32(cmbEmpresa.EditValue),
-                        id_usuario = Program.IdUsuario,
+                        folio = folioActual,
+                        codigo = StringAleatorio(12),
+                        importe = monto,
+                        id_empresa = idEmpresa,
+                        id_cliente = idCliente,
+                        fecha_emision = fecha,
                         estatus = "A",
-                        token = g.ToString(),
-                        codigo = vale.SubItems[6].Text
-                    };
-                    Program.Contexto.vales.Add(miVale);
+                        id_usuario = idUsuario,
+                        importe_letra = NumerosALetras.Convertir(monto.ToString(), true),
+                        token = Guid.NewGuid().ToString()
+                };
+                    listaNuevosVales.Add(nuevoVale);
+                    // Preparamos la vista previa
+                    var item = new ListViewItem(folioActual.ToString());
+                    item.SubItems.Add(monto.ToString("C"));
+                    lv.Items.Add(item);
+                    folioActual++; // Incrementamos el folio para el siguiente vale.
                 }
-                Program.Contexto.SaveChanges();
             }
-            catch (DbEntityValidationException e)
+            else // Pestaña "Por Denominación"
             {
-                foreach (var eve in e.EntityValidationErrors)
+                // Usamos un diccionario para hacer el código más limpio y escalable.
+                // La clave es el monto, el valor es el control TextBox.
+                var denominaciones = new Dictionary<double, TextEdit>
                 {
-                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
-                    foreach (var ve in eve.ValidationErrors)
+                    { 50, txtCantidad50 },
+                    { 100, txtCantidad100 },
+                    { 200, txtCantidad200 },
+                    { 500, txtCantidad500 }
+                };
+
+                // Recorremos cada par denominación/cantidad.
+                foreach (var par in denominaciones)
+                {
+                    double monto = par.Key;
+                    TextEdit txtCantidadDenominacion = par.Value;
+
+                    // Si el campo de cantidad no está vacío y es un número válido...
+                    if (int.TryParse(txtCantidadDenominacion.Text, out int cantidad) && cantidad > 0)
                     {
-                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-                            ve.PropertyName, ve.ErrorMessage);
+                        // ...creamos la cantidad de vales especificada para esa denominación.
+                        for (int i = 0; i < cantidad; i++)
+                        {
+                            var nuevoVale = new vales
+                            {
+                                folio = folioActual,
+                                codigo = StringAleatorio(12),
+                                importe = monto,
+                                id_empresa = idEmpresa,
+                                id_cliente = idCliente,
+                                fecha_emision = fecha,
+                                estatus = "A",
+                                id_usuario = idUsuario,
+                                importe_letra = NumerosALetras.Convertir(monto.ToString(), true),
+                                token = Guid.NewGuid().ToString()
+                            };
+                            listaNuevosVales.Add(nuevoVale);
+
+                            // Preparamos la vista previa
+                            var item = new ListViewItem(folioActual.ToString());
+                            item.SubItems.Add(monto.ToString("C"));
+                            lv.Items.Add(item);
+
+                            folioActual++; // Incrementamos el folio para el siguiente vale.
+                        }
                     }
                 }
-                throw;
-            } 
-            catch(DbUpdateException)
+            }
+
+            lv.EndUpdate(); // Reactivamos el redibujado, mostrando todos los items de golpe.
+
+            // 2. Ahora, guardamos TODOS los vales en la base de datos en UNA SOLA TRANSACCIÓN.
+            if (listaNuevosVales.Any())
             {
-                MessageBox.Show("Folio duplicado, verifique");
-            } 
+                using (var contexto = AyudanteDeConexion.CrearContexto())
+                {
+                    try
+                    {
+                        contexto.Configuration.AutoDetectChangesEnabled = false;
+                        contexto.vales.AddRange(listaNuevosVales);
+                        contexto.SaveChanges();
+                    }
+                    finally
+                    {
+                        contexto.Configuration.AutoDetectChangesEnabled = true;
+                    }
+                }
+            }
         }
 
         private void Imprime()
@@ -641,6 +745,16 @@ namespace GestionValesRdz.Forms
         private void timer1_Tick(object sender, EventArgs e)
         {
 
+        }
+
+        private void FrmRegistraVales_Load(object sender, EventArgs e)
+        {
+            if(!Properties.Settings.Default.v1)
+            {
+                txtFolioInicial.ReadOnly = false;
+                tabPage2.Parent = null;
+
+            }
         }
     }
 }

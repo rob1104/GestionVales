@@ -14,5 +14,8 @@
     <Setting Name="AnioFiltroVales" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2025</Value>
     </Setting>
+    <Setting Name="v1" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -25,13 +25,25 @@ namespace GestionValesRdz.Forms
                 }
 
                 // 1. Creamos un contexto nuevo solo para esta búsqueda.
-                using (var contexto = new ValesRdzDatosEntities())
+                using (var contexto = AyudanteDeConexion.CrearContexto())
                 {
+                    vales vale = null;
                     // 2. Incluimos los datos relacionados para evitar errores de carga diferida.
-                    vales vale = contexto.vales
-                        .Include(v => v.empresas)
-                        .Include(v => v.clientes)
-                        .SingleOrDefault(v => v.codigo == folio);
+                    if (Properties.Settings.Default.v1)
+                    {
+                        vale = contexto.vales
+                            .Include(v => v.empresas)
+                            .Include(v => v.clientes)
+                            .SingleOrDefault(v => v.codigo == folio);
+                    }else
+                    {
+                        var f = Convert.ToInt32(folio);
+                        vale = contexto.vales
+                            .Include(v => v.empresas)
+                            .Include(v => v.clientes)
+                            .SingleOrDefault(v => v.folio == f);
+                    }
+                    
 
                     // 3. Validamos el resultado de la búsqueda.
                     if (vale == null)
@@ -99,7 +111,7 @@ namespace GestionValesRdz.Forms
             if (lv.Items.Count > 0)
             {
                 // 4. Usamos un contexto nuevo también para la operación de guardado.
-                using (var contexto = new ValesRdzDatosEntities())
+                using (var contexto =  AyudanteDeConexion.CrearContexto())
                 {
                     foreach (ListViewItem item in lv.Items)
                     {
@@ -137,7 +149,7 @@ namespace GestionValesRdz.Forms
         private void FrmCanjeVales_Load(object sender, EventArgs e)
         {
             // 5. El Load también debe usar su propio contexto.
-            using (var contexto = new ValesRdzDatosEntities())
+            using (var contexto = AyudanteDeConexion.CrearContexto())
             {
                 // Usamos .ToList() para materializar la consulta y cerrar el contexto de forma segura.
                 var estaciones = contexto.estaciones.ToList();

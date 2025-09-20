@@ -99,8 +99,8 @@ namespace GestionValesRdz.Forms
                 PrintingService.Instance.AddPrintJob(printJob);
 
                 // 5. Informamos al usuario y cerramos el formulario.
-                XtraMessageBox.Show($"El trabajo de reimpresión para {totalVales} vales se ha agregado a la cola.",
-                    "Reimpresión en Cola", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                /*XtraMessageBox.Show($"El trabajo de reimpresión para {totalVales} vales se ha agregado a la cola.",
+                    "Reimpresión en Cola", MessageBoxButtons.OK, MessageBoxIcon.Information);*/
 
                 this.Close();
             }

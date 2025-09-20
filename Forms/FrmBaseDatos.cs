@@ -16,6 +16,7 @@ namespace GestionValesRdz.Forms
         {
             Properties.Settings.Default.servidor = txtServidor.Text;
             Properties.Settings.Default.basedatos = txtBaseDatos.Text;
+            Properties.Settings.Default.v1 = chkUsarTokens.Checked;
             Properties.Settings.Default.Save();
             XtraMessageBox.Show("El programa se cerrará para aplicar los cambios.");
             Application.Exit();
@@ -25,6 +26,7 @@ namespace GestionValesRdz.Forms
         {
             txtServidor.Text = Properties.Settings.Default.servidor;
             txtBaseDatos.Text = Properties.Settings.Default.basedatos;
+            chkUsarTokens.Checked = Properties.Settings.Default.v1;
         }
 
         private void btnProbar_Click(object sender, EventArgs e)

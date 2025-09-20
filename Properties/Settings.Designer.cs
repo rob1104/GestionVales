@@ -70,5 +70,17 @@ namespace GestionValesRdz.Properties {
                 this["AnioFiltroVales"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool v1 {
+            get {
+                return ((bool)(this["v1"]));
+            }
+            set {
+                this["v1"] = value;
+            }
+        }
     }
 }

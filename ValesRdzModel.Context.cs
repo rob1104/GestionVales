@@ -19,7 +19,14 @@ namespace GestionValesRdz
             : base("name=ValesRdzDatosEntities")
         {
         }
-    
+
+        // --- AÑADE ESTE NUEVO CONSTRUCTOR ---
+        public ValesRdzDatosEntities(string connectionString, bool nueva)
+            : base(connectionString)
+        {
+        }
+        // --- FIN DEL CÓDIGO A AÑADIR ---
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();

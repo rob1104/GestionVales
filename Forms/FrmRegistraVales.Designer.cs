@@ -773,6 +773,7 @@
             this.Name = "FrmRegistraVales";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Generar vales";
+            this.Load += new System.EventHandler(this.FrmRegistraVales_Load);
             ((System.ComponentModel.ISupportInitialize)(this.txtCantidad.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtFolioInicial.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtFolioFinal.Properties)).EndInit();

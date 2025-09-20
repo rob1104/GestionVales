@@ -445,7 +445,7 @@
             // 
             // sqlDataSource1
             // 
-            this.sqlDataSource1.ConnectionName = "robbiexis\\sqlexpress.ValesGasolina.dbo";
+            this.sqlDataSource1.ConnectionName = "programacion1\\sqlexpress.ValesGasolina4.dbo";
             this.sqlDataSource1.Name = "sqlDataSource1";
             customSqlQuery1.Name = "Query";
             queryParameter1.Name = "folio";

@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using DevExpress.DataAccess.Sql;
 using DevExpress.XtraEditors;
 using DevExpress.XtraReports.UI;
+using GestionValesRdz.Old;
 using GestionValesRdz.Servicios;
 
 namespace GestionValesRdz.Forms
@@ -250,25 +251,53 @@ namespace GestionValesRdz.Forms
 
         private void PrintBatch(int startFolio, int endFolio, string connectionString)
         {
-            // Esta es la misma lógica de impresión, ahora viviendo de forma segura aquí.
-            using (var vale = new rptVale2())
+            // Verificamos qué tipo de vale se va a imprimir.
+            if (Properties.Settings.Default.v1)
             {
-                if (vale.DataSource is SqlDataSource ds)
+                // CASO 1: Impresora normal (láser, inyección) con rptVale2.
+                // Imprime todo el rango en un solo trabajo de impresión. Es más eficiente.
+                using (var vale = new rptVale2())
                 {
-                    ds.Connection.ConnectionString = connectionString;
-                }
+                    if (vale.DataSource is SqlDataSource ds)
+                    {
+                        ds.Connection.ConnectionString = connectionString;
+                    }
 
-                vale.Parameters["folio"].Value = startFolio.ToString();
-                vale.Parameters["folio"].Visible = false;
-                vale.Parameters["folio2"].Value = endFolio;
-                vale.Parameters["folio2"].Visible = false;
-                vale.ShowPrintMarginsWarning = false;
+                    vale.Parameters["folio"].Value = startFolio;
+                    vale.Parameters["folio2"].Value = endFolio;
+                    vale.ShowPrintMarginsWarning = false;
 
-                using (ReportPrintTool tool = new ReportPrintTool(vale))
-                {
-                    tool.Print();
+                    using (ReportPrintTool tool = new ReportPrintTool(vale))
+                    {
+                        tool.Print();
+                    }
                 }
             }
+            else
+            {
+                // CASO 2: Impresora de matriz de puntos con rptVale4.
+                // Recorremos el lote y enviamos cada vale como un trabajo de impresión individual.
+                for (int folioActual = startFolio; folioActual <= endFolio; folioActual++)
+                {
+                    using (var vale = new rptVale4())
+                    {
+                        if (vale.DataSource is SqlDataSource ds)
+                        {
+                            ds.Connection.ConnectionString = connectionString;
+                        }
+
+                        // Solo pasamos el folio individual que se va a imprimir en esta iteración.
+                        vale.Parameters["folio"].Value = folioActual;
+                        vale.ShowPrintMarginsWarning = false;
+
+                        using (ReportPrintTool tool = new ReportPrintTool(vale))
+                        {
+                            tool.Print();
+                        }
+                    }
+                }
+            }
+
         }
 
         private void btnRespaldoBase_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)

@@ -58,7 +58,7 @@ namespace GestionValesRdz.Forms
             gridView1.ShowLoadingPanel();
             try
             {
-                using (var contexto = new ValesRdzDatosEntities())
+                using (var contexto = AyudanteDeConexion.CrearContexto())
                 {
                     // --- INICIA CAMBIO ---
                     // Usamos .Include() para cargar las tablas relacionadas que necesita el grid.
@@ -76,7 +76,16 @@ namespace GestionValesRdz.Forms
             }
             catch (Exception ex)
             {
-                XtraMessageBox.Show($"Error al cargar los vales: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string mensajeError = $"Error al cargar los vales: {ex.Message}";
+        if (ex.InnerException != null)
+        {
+            mensajeError += $"\n\nDetalles: {ex.InnerException.Message}";
+            if (ex.InnerException.InnerException != null)
+            {
+                mensajeError += $"\nMás Detalles: {ex.InnerException.InnerException.Message}";
+            }
+        }
+        XtraMessageBox.Show(mensajeError, "Error de Conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -95,7 +104,7 @@ namespace GestionValesRdz.Forms
 
         private void CancelaVale(int folio)
         {
-            using (var contexto = new ValesRdzDatosEntities())
+            using (var contexto = AyudanteDeConexion.CrearContexto())
             {
                 vales vale = contexto.vales.SingleOrDefault(p => p.folio == folio);
                 if (vale != null)
@@ -151,7 +160,7 @@ namespace GestionValesRdz.Forms
 
         private void RevertirVale(int folio)
         {
-            using (var contexto = new ValesRdzDatosEntities())
+            using (var contexto = AyudanteDeConexion.CrearContexto())
             {
                 vales vale = contexto.vales.SingleOrDefault(p => p.folio == folio);
                 if (vale != null)

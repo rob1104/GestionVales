@@ -37,10 +37,12 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnProbar = new DevExpress.XtraEditors.SimpleButton();
             this.btnRestore = new DevExpress.XtraEditors.SimpleButton();
+            this.chkUsarTokens = new DevExpress.XtraEditors.CheckEdit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl1)).BeginInit();
             this.groupControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtServidor.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtBaseDatos.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chkUsarTokens.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // groupControl1
@@ -122,12 +124,21 @@
             this.btnRestore.Text = "Restaurar";
             this.btnRestore.Click += new System.EventHandler(this.btnRestore_Click);
             // 
+            // chkUsarTokens
+            // 
+            this.chkUsarTokens.Location = new System.Drawing.Point(15, 201);
+            this.chkUsarTokens.Name = "chkUsarTokens";
+            this.chkUsarTokens.Properties.Caption = "Usar Tokens";
+            this.chkUsarTokens.Size = new System.Drawing.Size(95, 20);
+            this.chkUsarTokens.TabIndex = 7;
+            // 
             // FrmBaseDatos
             // 
             this.AcceptButton = this.btnAceptar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(325, 205);
+            this.ClientSize = new System.Drawing.Size(325, 233);
+            this.Controls.Add(this.chkUsarTokens);
             this.Controls.Add(this.btnRestore);
             this.Controls.Add(this.btnProbar);
             this.Controls.Add(this.label1);
@@ -145,6 +156,7 @@
             this.groupControl1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtServidor.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtBaseDatos.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chkUsarTokens.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -160,5 +172,6 @@
         private System.Windows.Forms.Label label1;
         private DevExpress.XtraEditors.SimpleButton btnProbar;
         private DevExpress.XtraEditors.SimpleButton btnRestore;
+        private DevExpress.XtraEditors.CheckEdit chkUsarTokens;
     }
 }
