@@ -11,8 +11,6 @@ namespace GestionValesRdz.Forms
 {
     public partial class FrmPrincipal : XtraForm
     {
-        private bool _isPrinting = false;
-
         public FrmPrincipal()
         {
             InitializeComponent();
@@ -108,7 +106,7 @@ namespace GestionValesRdz.Forms
 
         private void btnRegistrarVales_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            new FrmRegistraVales().ShowDialog();
+            new FrmRegistraVales().Show();
         }
 
         private void btnGestionVales_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -124,7 +122,7 @@ namespace GestionValesRdz.Forms
 
         private void btnCanjeVale_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            new FrmCanjeVales().ShowDialog();
+            new FrmCanjeVales().Show();
         }
 
         private void btnValesCancelados_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -213,92 +211,7 @@ namespace GestionValesRdz.Forms
         private void btnValesPendientes_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             new FrmRptValePendienteCanje().ShowDialog();
-        }
-
-        private void timerImpresion_Tick(object sender, System.EventArgs e)
-        {
-            if (_isPrinting) return;
-
-            if(PrintingService.Instance.TryPeekNextJob(out PrintJob currentJob))
-            {
-                _isPrinting = true;
-
-                try
-                {
-                    //Lote actual
-                    int batchSize = 50;
-                    int startFolio = currentJob.StartFolio + currentJob.ValesImpresos;
-                    int remainingVales = currentJob.TotalVales - currentJob.ValesImpresos;
-                    int endFolio = startFolio + Math.Min(batchSize, remainingVales) - 1;
-
-                    PrintBatch(startFolio, endFolio, currentJob.ConnectionString);
-                    currentJob.ValesImpresos += Math.Min(batchSize, remainingVales);
-                    if (currentJob.ValesImpresos >= currentJob.TotalVales)
-                    {
-                        PrintingService.Instance.TryDequeueJob(out _);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    PrintingService.Instance.TryDequeueJob(out _);
-                }
-                finally
-                {
-                    _isPrinting = false;
-                }
-            }           
-        }
-
-        private void PrintBatch(int startFolio, int endFolio, string connectionString)
-        {
-            // Verificamos qué tipo de vale se va a imprimir.
-            if (Properties.Settings.Default.v1)
-            {
-                // CASO 1: Impresora normal (láser, inyección) con rptVale2.
-                // Imprime todo el rango en un solo trabajo de impresión. Es más eficiente.
-                using (var vale = new rptVale2())
-                {
-                    if (vale.DataSource is SqlDataSource ds)
-                    {
-                        ds.Connection.ConnectionString = connectionString;
-                    }
-
-                    vale.Parameters["folio"].Value = startFolio;
-                    vale.Parameters["folio2"].Value = endFolio;
-                    vale.ShowPrintMarginsWarning = false;
-
-                    using (ReportPrintTool tool = new ReportPrintTool(vale))
-                    {
-                        tool.Print();
-                    }
-                }
-            }
-            else
-            {
-                // CASO 2: Impresora de matriz de puntos con rptVale4.
-                // Recorremos el lote y enviamos cada vale como un trabajo de impresión individual.
-                for (int folioActual = startFolio; folioActual <= endFolio; folioActual++)
-                {
-                    using (var vale = new rptVale4())
-                    {
-                        if (vale.DataSource is SqlDataSource ds)
-                        {
-                            ds.Connection.ConnectionString = connectionString;
-                        }
-
-                        // Solo pasamos el folio individual que se va a imprimir en esta iteración.
-                        vale.Parameters["folio"].Value = folioActual;
-                        vale.ShowPrintMarginsWarning = false;
-
-                        using (ReportPrintTool tool = new ReportPrintTool(vale))
-                        {
-                            tool.Print();
-                        }
-                    }
-                }
-            }
-
-        }
+        }        
 
         private void btnRespaldoBase_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {

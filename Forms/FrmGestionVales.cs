@@ -35,7 +35,7 @@ namespace GestionValesRdz.Forms
 
             // Llenamos el ComboBox con los años, desde 2023 hasta el año actual.
             int anioActual = DateTime.Now.Year;
-            for (int anio = 2020; anio <= anioActual; anio++)
+            for (int anio = 2016; anio <= anioActual; anio++)
             {
                 cboAnioRepo.Items.Add(anio);
             }

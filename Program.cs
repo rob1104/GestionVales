@@ -6,6 +6,7 @@ using DevExpress.UserSkins;
 using DevExpress.Skins;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using GestionValesRdz.Servicios;
 
 namespace GestionValesRdz
 {
@@ -36,6 +37,7 @@ namespace GestionValesRdz
                 UserLookAndFeel.Default.SkinName = Properties.Settings.Default.tema;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            PrintingService.Instance.Start();
             Application.Run(new FrmLogin());
         }
 

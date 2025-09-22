@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DevExpress.XtraEditors;
 using System.Data.Entity;
+using System.Collections.Generic;
 
 namespace GestionValesRdz.Forms
 {
@@ -108,31 +109,93 @@ namespace GestionValesRdz.Forms
 
         private void btnCanjear_Click(object sender, EventArgs e)
         {
-            if (lv.Items.Count > 0)
+            // --- 1. VALIDACIONES INICIALES ---
+            // Nos aseguramos de que todo esté listo antes de empezar.
+            if (lv.Items.Count == 0)
             {
-                // 4. Usamos un contexto nuevo también para la operación de guardado.
-                using (var contexto =  AyudanteDeConexion.CrearContexto())
-                {
-                    foreach (ListViewItem item in lv.Items)
-                    {
-                        int folio = Convert.ToInt32(item.SubItems[0].Text);
-                        vales vale = contexto.vales.SingleOrDefault(p => p.folio == folio);
+                return; // No hay nada que hacer.
+            }
 
-                        if (vale != null)
+            if (cmbEstacion.EditValue == null)
+            {
+                XtraMessageBox.Show("Debe seleccionar una estación para el canje.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // --- 2. RECOPILAR TODOS LOS FOLIOS ---
+            // Juntamos todos los folios de la lista en un solo lugar.
+            var foliosACanjear = new List<int>();
+            foreach (ListViewItem item in lv.Items)
+            {
+                if (int.TryParse(item.SubItems[0].Text, out int folio))
+                {
+                    foliosACanjear.Add(folio);
+                }
+            }
+
+            if (!foliosACanjear.Any())
+            {
+                XtraMessageBox.Show("No se encontraron folios válidos en la lista.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // --- 3. ACTUALIZACIÓN EN LOTE (MÁS RÁPIDO Y SEGURO) ---
+            try
+            {
+                List<string> erroresDeValidacion = new List<string>();
+                int valesActualizados = 0;
+
+                using (var contexto = AyudanteDeConexion.CrearContexto())
+                {
+                    // 3.1. Hacemos UNA SOLA CONSULTA a la base de datos para traer todos los vales.
+                    var valesEncontrados = contexto.vales
+                        .Where(v => foliosACanjear.Contains(v.folio))
+                        .ToList();
+
+                    // 3.2. Preparamos los cambios en memoria.
+                    foreach (var vale in valesEncontrados)
+                    {
+                        // Re-validamos cada vale para asegurarnos de que no ha sido canjeado o cancelado
+                        // por otro usuario mientras estaba en nuestra lista.
+                        if (vale.estatus != "A")
                         {
-                            vale.estatus = "P";
-                            vale.id_estacion = Convert.ToInt32(cmbEstacion.EditValue);
-                            vale.fecha_corte = dtpFechaCorte.DateTime;
-                            vale.fecha_canje = DateTime.Now;
+                            erroresDeValidacion.Add($"El vale {vale.folio} ya no está activo (estado: {vale.estatus}).");
+                            continue; // Saltar al siguiente vale
                         }
+
+                        // Si es válido, lo actualizamos.
+                        vale.estatus = "P"; // 'P' de Procesado/Pagado
+                        vale.id_estacion = Convert.ToInt32(cmbEstacion.EditValue);
+                        vale.fecha_corte = dtpFechaCorte.DateTime;
+                        vale.fecha_canje = DateTime.Now;
+                        valesActualizados++;
                     }
-                    contexto.SaveChanges(); // Guardamos todos los cambios en una sola transacción.
+
+                    // 3.3. Guardamos TODOS los cambios en una sola transacción.
+                    contexto.SaveChanges();
                 }
 
-                XtraMessageBox.Show("Vales canjeados correctamente");
+                // --- 4. INFORMAR AL USUARIO ---
+                var mensajeFinal = new System.Text.StringBuilder();
+                mensajeFinal.AppendLine($"{valesActualizados} vales canjeados correctamente.");
+
+                // Si hubo vales que no se pudieron canjear, los informamos.
+                if (erroresDeValidacion.Any())
+                {
+                    mensajeFinal.AppendLine("\nAlgunos vales no se pudieron procesar:");
+                    erroresDeValidacion.ForEach(error => mensajeFinal.AppendLine($"- {error}"));
+                }
+
+                XtraMessageBox.Show(mensajeFinal.ToString(), "Proceso Completado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                 NotificadorDatos.AnunciarCambio();
-                Close(); // Usar Close() es más limpio que Dispose() aquí.
+                Close();
             }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show($"Ocurrió un error inesperado al guardar los cambios:\n\n{ex.Message}", "Error de Base de Datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
