@@ -74,7 +74,7 @@ namespace GestionValesRdz.Servicios
                             using (var tool = new ReportPrintTool(vale)) tool.Print();
                         }
                         // La pausa sigue siendo una buena idea para no saturar el hardware.
-                        Thread.Sleep(250);
+                        Thread.Sleep(500);
                     }
                 }
             }
