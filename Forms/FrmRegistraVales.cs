@@ -165,45 +165,104 @@ namespace GestionValesRdz.Forms
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-           
-            //***********************************************************************************************************
 
-            DialogResult r = XtraMessageBox.Show(string.Format("¿Seguro que desea generar los vales caputrados?"), "Verificar datos", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-            if (r == DialogResult.Yes)
+            // 1. Validamos que la lista no esté vacía.
+            if (lv.Items.Count == 0)
             {
-                try
+                XtraMessageBox.Show("No hay vales en la lista para registrar e imprimir.", "Lista Vacía", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var r = XtraMessageBox.Show("Se guardarán los vales en la base de datos y se enviarán todos los lotes de la lista a la cola de impresión.\n\n¿Desea continuar?",
+                "Confirmar Proceso", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (r != DialogResult.Yes)
+            {
+                return;
+            }
+
+            try
+            {
+                // --- INICIA LA NUEVA LÓGICA DE IMPRESIÓN ---
+
+                // 2. Primero, guardamos los vales en la base de datos.
+                // El servicio de impresión los leerá desde ahí.
+                GuardaEnBase();
+                
+
+                // 3. Extraemos todos los números de folio del ListView y los ordenamos.
+                var foliosAImprimir = lv.Items.Cast<ListViewItem>()
+                                           .Select(item => int.Parse(item.Text))
+                                           .OrderBy(folio => folio)
+                                           .ToList();
+
+                if (!foliosAImprimir.Any()) return;
+
+                GeneraVenta();
+
+                // 4. Agrupamos los folios en rangos consecutivos para una impresión eficiente.
+                var rangosDeImpresion = new List<PrintJob>();
+
+                // Empezamos el primer rango con el primer folio de la lista.
+                var rangoActual = new PrintJob
                 {
-                    GuardaEnBase();
-                    GeneraVenta();
-                    if (lv.Items.Count == 0)
+                    StartFolio = foliosAImprimir[0],
+                    TotalVales = 1,
+                    ConnectionString = AyudanteDeConexion.CrearContexto().Database.Connection.ConnectionString
+                };
+
+                // Recorremos la lista a partir del segundo folio para encontrar los rangos.
+                for (int i = 1; i < foliosAImprimir.Count; i++)
+                {
+                    // Si el folio actual es exactamente el siguiente al último del rango...
+                    if (foliosAImprimir[i] == rangoActual.StartFolio + rangoActual.TotalVales)
                     {
-                        XtraMessageBox.Show("Rango de vales incorrecto, especifique un nuevo rango", "Vales", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        return;
+                        // ...simplemente extendemos el rango actual.
+                        rangoActual.TotalVales++;
                     }
-
-                    var printJob = new PrintJob
+                    else
                     {
-                        JobName = $"Vales del folio {txtFolioInicial.Text}",
-                        StartFolio = Convert.ToInt32(txtFolioInicial.Text),
-                        TotalVales = GetTotalValesToPrint(),
-                        ConnectionString = string.Format(@"XpoProvider=MSSqlServer;data source={0};initial catalog={1};User Id=sa;Password=9753186400;",
-                            Properties.Settings.Default.servidor, Properties.Settings.Default.basedatos)
-                    };
-                    PrintingService.Instance.AddPrintJob(printJob);
-                    NotificadorDatos.AnunciarCambio();
-                    //XtraMessageBox.Show("Los vales se han agregado a la impresora y se imprimirán en segundo plano. Puede cerrar esta ventana y continuar trabajando",
-                      //  "Impresión en Curso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        // Si hay un salto, el rango anterior ha terminado. Lo guardamos.
+                        rangoActual.JobName = $"Vales Folio {rangoActual.StartFolio} al {rangoActual.StartFolio + rangoActual.TotalVales - 1}";
+                        rangosDeImpresion.Add(rangoActual);
 
-                    //Imprime();                
-                    btnGuardar.Enabled = false;
-                    Close();
+                        // Y empezamos un nuevo rango con el folio actual.
+                        rangoActual = new PrintJob
+                        {
+                            StartFolio = foliosAImprimir[i],
+                            TotalVales = 1,
+                            ConnectionString = rangoActual.ConnectionString // Reutilizamos la connection string
+                        };
+                    }
                 }
-                catch (Exception ex)
+
+                // ¡Importante! Guardamos el último rango que se estaba procesando.
+                rangoActual.JobName = $"Vales Folio {rangoActual.StartFolio} al {rangoActual.StartFolio + rangoActual.TotalVales - 1}";
+                rangosDeImpresion.Add(rangoActual);
+
+                // 5. Añadimos todos los rangos encontrados a la cola de impresión.
+                foreach (var job in rangosDeImpresion)
                 {
-                    XtraMessageBox.Show($"Error al generar vales: {ex.Message}", "Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    btnGuardar.Enabled = true;
-                }                
+                    PrintingService.Instance.AddPrintJob(job);
+                }
+
+                // --- FIN DE LA NUEVA LÓGICA ---
+
+                // 6. Notificamos al usuario y limpiamos la pantalla para el siguiente lote.
+                NotificadorDatos.AnunciarCambio();
+
+                //XtraMessageBox.Show($"{rangosDeImpresion.Count} lote(s) con un total de {foliosAImprimir.Count} vales se han guardado y enviado a la cola de impresión.",
+                  //  "Proceso Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                lv.Items.Clear();
+                txtFolioInicial.Text = ObtieneFolioMayor().ToString();
+                txtFolioFinal.Text = "";
+                txtCantidad.Text = "0";
+                txtImporte.Text = "0";
+            }
+            catch (Exception ex)
+            {
+                XtraMessageBox.Show($"Ocurrió un error al procesar la lista: {ex.Message}", "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -220,53 +279,75 @@ namespace GestionValesRdz.Forms
 
         private void GeneraVenta()
         {
+            // Si no hay items en la lista, no hacemos nada.
+            if (lv.Items.Count == 0)
+            {
+                return;
+            }
+
             try
             {
+                // --- 1. AGRUPAR VALES POR DENOMINACIÓN ---
+                // Usamos LINQ para agrupar todos los items del ListView por su monto (denominación).
+                // Asumimos que el monto está en la 4ª columna (índice 3).
+                var gruposPorDenominacion = lv.Items.Cast<ListViewItem>()
+                    .GroupBy(item => decimal.Parse(item.SubItems[3].Text, System.Globalization.NumberStyles.Currency));
 
-                if(lv.Items.Count == 0)
+                // Creamos una lista para guardar los registros de venta que vamos a generar.
+                var nuevasVentas = new List<ventas>();
+
+                // --- 2. PROCESAR CADA GRUPO ---
+                // Recorremos cada grupo de vales (ej. todos los de $100, luego todos los de $500, etc.).
+                foreach (var grupo in gruposPorDenominacion)
                 {
-                    XtraMessageBox.Show("No hay vales agregados, verifique", "Vales", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    decimal denominacionActual = grupo.Key;
+
+                    // Extraemos los folios de todos los vales que pertenecen a este grupo.
+                    var foliosDelGrupo = grupo.Select(item => int.Parse(item.Text)).OrderBy(folio => folio).ToList();
+
+                    if (!foliosDelGrupo.Any()) continue; // Si el grupo está vacío, lo ignoramos.
+
+                    // Calculamos los datos específicos para ESTA venta.
+                    int cantidad = foliosDelGrupo.Count;
+                    decimal importeTotal = cantidad * denominacionActual;
+                    int folioInicio = foliosDelGrupo.First();
+                    int folioFin = foliosDelGrupo.Last();
+
+                    // Creamos el objeto 'venta' para esta denominación.
+                    var venta = new ventas()
+                    {
+                        fecha = DateTime.Now.Date,
+                        folioInicio = folioInicio,
+                        folioFin = folioFin,
+                        denominacion = (double)denominacionActual, // <-- ¡Ahora se guarda la denominación correcta!
+                        cantidad = cantidad,
+                        importe = (double)importeTotal,
+                        id_cliente = Convert.ToInt32(cmbCliente.EditValue),
+                        id_empresa = Convert.ToInt32(cmbEmpresa.EditValue),
+                        id_usuario = Auth.Id
+                    };
+
+                    nuevasVentas.Add(venta); // Añadimos la nueva venta a nuestra lista.
                 }
 
-                double importex = 0;
-                if (Convert.ToDecimal(txtImporte.Text) == 0)
+                // --- 3. GUARDAR TODAS LAS VENTAS ---
+                // Si se generó al menos una venta, la guardamos en la base de datos.
+                if (nuevasVentas.Any())
                 {
-
-                    if (txtCantidad50.Text == string.Empty) txtCantidad50.Text = "0";
-                    if (txtCantidad100.Text == string.Empty) txtCantidad100.Text = "0";
-                    if (txtCantidad200.Text == string.Empty) txtCantidad200.Text = "0";
-                    if (txtCantidad500.Text == string.Empty) txtCantidad500.Text = "0";
-
-                    var aux50 = Convert.ToInt32(txtCantidad50.Text) * Convert.ToDouble(txtImporte50.Text);
-                    var aux100 = Convert.ToInt32(txtCantidad100.Text) * Convert.ToDouble(txtImporte100.Text);
-                    var aux200 = Convert.ToInt32(txtCantidad200.Text) * Convert.ToDouble(txtImporte200.Text);
-                    var aux500 = Convert.ToInt32(txtCantidad500.Text) * Convert.ToDouble(txtImporte500.Text);
-                    importex = aux50 + aux100 + aux200 + aux500;
+                    using (var contexto = AyudanteDeConexion.CrearContexto())
+                    {
+                        // Usamos AddRange para guardar todos los registros de venta en una sola transacción.
+                        contexto.ventas.AddRange(nuevasVentas);
+                        contexto.SaveChanges();
+                    }
                 }
-                else
-                    importex = Math.Round(Convert.ToInt32(txtCantidad.Value) * Convert.ToDouble(txtImporte.Text), 2);
-
-                ventas venta = new ventas()
-                {
-                    fecha = DateTime.Now.Date,
-                    folioInicio = Convert.ToInt32(txtFolioInicial.Text),
-                    folioFin = Convert.ToInt32(txtFolioInicial.Text) + lv.Items.Count - 1,
-                    denominacion = Convert.ToDouble(txtImporte.Text),
-                    cantidad = lv.Items.Count,
-                    importe = importex,
-                    id_cliente = Convert.ToInt32(cmbCliente.EditValue),
-                    id_empresa = Convert.ToInt32(cmbEmpresa.EditValue),
-                    id_usuario = Program.IdUsuario
-                };
-                Program.Contexto.ventas.Add(venta);
-                Program.Contexto.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                // Lanzamos la excepción para que el método que lo llamó (btnGuardar_Click) la capture.
+                throw new Exception("Ocurrió un error al generar los registros de venta.", ex);
             }
-           
+
         }
 
         private void AgregaALista()
@@ -444,101 +525,47 @@ namespace GestionValesRdz.Forms
 
         private void GuardaEnBase()
         {
-            lv.Items.Clear();
+            // Si no hay nada en la lista, no hay nada que guardar.
+            if (lv.Items.Count == 0)
+            {
+                return;
+            }
 
-            // 1. Creamos una lista para almacenar todos los nuevos vales en memoria.
+            // 1. Creamos una lista para almacenar los vales que vamos a crear desde el ListView.
             var listaNuevosVales = new List<vales>();
-            int folioActual = Convert.ToInt32(txtFolioInicial.Text);
-
-            // Datos comunes para todos los vales que se van a crear.
-            int idEmpresa = Convert.ToInt32(cmbEmpresa.EditValue);
-            int idCliente = Convert.ToInt32(cmbCliente.EditValue);
             DateTime fecha = DateTime.Now;
             int idUsuario = Auth.Id;
 
-            lv.BeginUpdate(); // Pausamos el redibujado del ListView para máxima velocidad.
-
-            if (tc.SelectedIndex == 0) // Pestaña "Por Cantidad"
+            // 2. Recorremos cada item que el usuario agregó a la lista (ListView).
+            foreach (ListViewItem item in lv.Items)
             {
-                int cantidad = Convert.ToInt32(txtCantidad.Text);
-                double monto = Convert.ToDouble(txtImporte.Text);
+                // Extraemos los datos de cada columna del item.
+                // Asegúrate de que el orden de los SubItems sea el correcto.
+                int folio = Convert.ToInt32(item.SubItems[0].Text);
+                double monto = double.Parse(item.SubItems[3].Text, System.Globalization.NumberStyles.Currency); // Leemos el monto
+                int idEmpresa = Convert.ToInt32(item.SubItems[4].Text);
+                int idCliente = Convert.ToInt32(item.SubItems[5].Text);
+                string codigo = item.SubItems[6].Text;
 
-                for (int i = 0; i < cantidad; i++)
-                {                    
-                    var nuevoVale = new vales
-                    {
-                        folio = folioActual,
-                        codigo = StringAleatorio(12),
-                        importe = monto,
-                        id_empresa = idEmpresa,
-                        id_cliente = idCliente,
-                        fecha_emision = fecha,
-                        estatus = "A",
-                        id_usuario = idUsuario,
-                        importe_letra = NumerosALetras.Convertir(monto.ToString(), true),
-                        token = Guid.NewGuid().ToString()
-                };
-                    listaNuevosVales.Add(nuevoVale);
-                    // Preparamos la vista previa
-                    var item = new ListViewItem(folioActual.ToString());
-                    item.SubItems.Add(monto.ToString("C"));
-                    lv.Items.Add(item);
-                    folioActual++; // Incrementamos el folio para el siguiente vale.
-                }
-            }
-            else // Pestaña "Por Denominación"
-            {
-                // Usamos un diccionario para hacer el código más limpio y escalable.
-                // La clave es el monto, el valor es el control TextBox.
-                var denominaciones = new Dictionary<double, TextEdit>
+                // Creamos el objeto 'vale' con los datos de la fila actual.
+                var nuevoVale = new vales
                 {
-                    { 50, txtCantidad50 },
-                    { 100, txtCantidad100 },
-                    { 200, txtCantidad200 },
-                    { 500, txtCantidad500 }
+                    folio = folio,
+                    codigo = StringAleatorio(12),
+                    importe = monto,
+                    id_empresa = idEmpresa,
+                    id_cliente = idCliente,
+                    fecha_emision = fecha,
+                    estatus = "A",
+                    id_usuario = idUsuario,
+                    importe_letra = NumerosALetras.Convertir(monto.ToString(), true),
+                    token = Guid.NewGuid().ToString()
                 };
 
-                // Recorremos cada par denominación/cantidad.
-                foreach (var par in denominaciones)
-                {
-                    double monto = par.Key;
-                    TextEdit txtCantidadDenominacion = par.Value;
-
-                    // Si el campo de cantidad no está vacío y es un número válido...
-                    if (int.TryParse(txtCantidadDenominacion.Text, out int cantidad) && cantidad > 0)
-                    {
-                        // ...creamos la cantidad de vales especificada para esa denominación.
-                        for (int i = 0; i < cantidad; i++)
-                        {
-                            var nuevoVale = new vales
-                            {
-                                folio = folioActual,
-                                codigo = StringAleatorio(12),
-                                importe = monto,
-                                id_empresa = idEmpresa,
-                                id_cliente = idCliente,
-                                fecha_emision = fecha,
-                                estatus = "A",
-                                id_usuario = idUsuario,
-                                importe_letra = NumerosALetras.Convertir(monto.ToString(), true),
-                                token = Guid.NewGuid().ToString()
-                            };
-                            listaNuevosVales.Add(nuevoVale);
-
-                            // Preparamos la vista previa
-                            var item = new ListViewItem(folioActual.ToString());
-                            item.SubItems.Add(monto.ToString("C"));
-                            lv.Items.Add(item);
-
-                            folioActual++; // Incrementamos el folio para el siguiente vale.
-                        }
-                    }
-                }
+                listaNuevosVales.Add(nuevoVale);
             }
 
-            lv.EndUpdate(); // Reactivamos el redibujado, mostrando todos los items de golpe.
-
-            // 2. Ahora, guardamos TODOS los vales en la base de datos en UNA SOLA TRANSACCIÓN.
+            // 3. Guardamos TODOS los vales de la lista en la base de datos en UNA SOLA TRANSACCIÓN.
             if (listaNuevosVales.Any())
             {
                 using (var contexto = AyudanteDeConexion.CrearContexto())
@@ -555,7 +582,7 @@ namespace GestionValesRdz.Forms
                     }
                 }
             }
-        }
+        }            
 
         private void Imprime()
         {
@@ -603,32 +630,27 @@ namespace GestionValesRdz.Forms
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            //Validaciones
-            if (txtFolioFinal.Text == string.Empty || Convert.ToInt32(txtCantidad.Text) <= 0)
+            // Validaciones de UI antes de llamar a la lógica principal
+            if (cmbEmpresa.EditValue == null || cmbCliente.EditValue == null || string.IsNullOrEmpty(txtImporte.Text))
             {
-                XtraMessageBox.Show("Rango de vales incorrecto, especifique un nuevo rango", "Vales", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
-            }
-            if (cmbCliente.EditValue == null)
-            {
-                XtraMessageBox.Show("Especifique un cliente", "Vales", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                cmbCliente.Select();
-                return;
-            }
-            if (cmbEmpresa.EditValue == null)
-            {
-                XtraMessageBox.Show("Especifique una empresa", "Vales", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                cmbCliente.Select();
-                return;
-            }
-            if (Convert.ToDouble(txtImporte.Text) == 0 || txtImporte.Text == string.Empty)
-            {
-                XtraMessageBox.Show("Especifique el importe del vale", "Vales", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                cmbCliente.Select();
+                XtraMessageBox.Show("Debe seleccionar una empresa, un cliente y especificar un importe.", "Datos Incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
+            // Llama al método que hace el trabajo pesado de validar y agregar.
             AgregaALista();
+
+            // --- ¡LA MEJORA CLAVE PARA EL USUARIO! ---
+            // Una vez agregado un lote, preparamos la pantalla para el siguiente.
+            if (int.TryParse(txtFolioFinal.Text, out int ultimoFolioAgregado))
+            {
+                // 1. El nuevo folio inicial es el siguiente al último folio final.
+                txtFolioInicial.Text = (ultimoFolioAgregado + 1).ToString();
+
+                // 2. Limpiamos el folio final y ponemos el foco ahí.
+                txtFolioFinal.Text = "";
+                txtFolioFinal.Focus();
+            }
         }
 
         private void tc_SelectedIndexChanged(object sender, EventArgs e)

@@ -29,30 +29,30 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPrincipal));
-            DevExpress.Utils.SuperToolTip superToolTip1 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem1 = new DevExpress.Utils.ToolTipTitleItem();
-            DevExpress.Utils.ToolTipItem toolTipItem1 = new DevExpress.Utils.ToolTipItem();
-            DevExpress.Utils.SuperToolTip superToolTip2 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipItem toolTipItem2 = new DevExpress.Utils.ToolTipItem();
-            DevExpress.Utils.SuperToolTip superToolTip3 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipItem toolTipItem3 = new DevExpress.Utils.ToolTipItem();
-            DevExpress.Utils.SuperToolTip superToolTip4 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem2 = new DevExpress.Utils.ToolTipTitleItem();
-            DevExpress.Utils.ToolTipItem toolTipItem4 = new DevExpress.Utils.ToolTipItem();
-            DevExpress.Utils.SuperToolTip superToolTip5 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem3 = new DevExpress.Utils.ToolTipTitleItem();
-            DevExpress.Utils.ToolTipItem toolTipItem5 = new DevExpress.Utils.ToolTipItem();
-            DevExpress.Utils.SuperToolTip superToolTip6 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipItem toolTipItem6 = new DevExpress.Utils.ToolTipItem();
-            DevExpress.Utils.SuperToolTip superToolTip7 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem4 = new DevExpress.Utils.ToolTipTitleItem();
-            DevExpress.Utils.ToolTipItem toolTipItem7 = new DevExpress.Utils.ToolTipItem();
-            DevExpress.Utils.SuperToolTip superToolTip8 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem5 = new DevExpress.Utils.ToolTipTitleItem();
-            DevExpress.Utils.ToolTipItem toolTipItem8 = new DevExpress.Utils.ToolTipItem();
-            DevExpress.Utils.SuperToolTip superToolTip9 = new DevExpress.Utils.SuperToolTip();
-            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem6 = new DevExpress.Utils.ToolTipTitleItem();
-            DevExpress.Utils.ToolTipItem toolTipItem9 = new DevExpress.Utils.ToolTipItem();
+            DevExpress.Utils.SuperToolTip superToolTip10 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem7 = new DevExpress.Utils.ToolTipTitleItem();
+            DevExpress.Utils.ToolTipItem toolTipItem10 = new DevExpress.Utils.ToolTipItem();
+            DevExpress.Utils.SuperToolTip superToolTip11 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipItem toolTipItem11 = new DevExpress.Utils.ToolTipItem();
+            DevExpress.Utils.SuperToolTip superToolTip12 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipItem toolTipItem12 = new DevExpress.Utils.ToolTipItem();
+            DevExpress.Utils.SuperToolTip superToolTip13 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem8 = new DevExpress.Utils.ToolTipTitleItem();
+            DevExpress.Utils.ToolTipItem toolTipItem13 = new DevExpress.Utils.ToolTipItem();
+            DevExpress.Utils.SuperToolTip superToolTip14 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem9 = new DevExpress.Utils.ToolTipTitleItem();
+            DevExpress.Utils.ToolTipItem toolTipItem14 = new DevExpress.Utils.ToolTipItem();
+            DevExpress.Utils.SuperToolTip superToolTip15 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipItem toolTipItem15 = new DevExpress.Utils.ToolTipItem();
+            DevExpress.Utils.SuperToolTip superToolTip16 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem10 = new DevExpress.Utils.ToolTipTitleItem();
+            DevExpress.Utils.ToolTipItem toolTipItem16 = new DevExpress.Utils.ToolTipItem();
+            DevExpress.Utils.SuperToolTip superToolTip17 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem11 = new DevExpress.Utils.ToolTipTitleItem();
+            DevExpress.Utils.ToolTipItem toolTipItem17 = new DevExpress.Utils.ToolTipItem();
+            DevExpress.Utils.SuperToolTip superToolTip18 = new DevExpress.Utils.SuperToolTip();
+            DevExpress.Utils.ToolTipTitleItem toolTipTitleItem12 = new DevExpress.Utils.ToolTipTitleItem();
+            DevExpress.Utils.ToolTipItem toolTipItem18 = new DevExpress.Utils.ToolTipItem();
             this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             this.barStaticItem1 = new DevExpress.XtraBars.BarStaticItem();
             this.btnBaseDatos = new DevExpress.XtraBars.BarButtonItem();
@@ -163,12 +163,12 @@
             this.btnBaseDatos.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnBaseDatos.ImageOptions.Image")));
             this.btnBaseDatos.Name = "btnBaseDatos";
             this.btnBaseDatos.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
-            toolTipTitleItem1.Text = "BASE DE DATOS";
-            toolTipItem1.LeftIndent = 6;
-            toolTipItem1.Text = "Configuración de la instancia y base datos del motor SQL SERVER";
-            superToolTip1.Items.Add(toolTipTitleItem1);
-            superToolTip1.Items.Add(toolTipItem1);
-            this.btnBaseDatos.SuperTip = superToolTip1;
+            toolTipTitleItem7.Text = "BASE DE DATOS";
+            toolTipItem10.LeftIndent = 6;
+            toolTipItem10.Text = "Configuración de la instancia y base datos del motor SQL SERVER";
+            superToolTip10.Items.Add(toolTipTitleItem7);
+            superToolTip10.Items.Add(toolTipItem10);
+            this.btnBaseDatos.SuperTip = superToolTip10;
             this.btnBaseDatos.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnBaseDatos_ItemClick);
             // 
             // btnUsuarios
@@ -177,9 +177,9 @@
             this.btnUsuarios.Id = 3;
             this.btnUsuarios.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnUsuarios.ImageOptions.Image")));
             this.btnUsuarios.Name = "btnUsuarios";
-            toolTipItem2.Text = "Gestión de usuarios";
-            superToolTip2.Items.Add(toolTipItem2);
-            this.btnUsuarios.SuperTip = superToolTip2;
+            toolTipItem11.Text = "Gestión de usuarios";
+            superToolTip11.Items.Add(toolTipItem11);
+            this.btnUsuarios.SuperTip = superToolTip11;
             this.btnUsuarios.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnUsuarios_ItemClick);
             // 
             // btnNuevoUsuario
@@ -188,9 +188,9 @@
             this.btnNuevoUsuario.Id = 4;
             this.btnNuevoUsuario.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnNuevoUsuario.ImageOptions.Image")));
             this.btnNuevoUsuario.Name = "btnNuevoUsuario";
-            toolTipItem3.Text = "Nuevo usuario...";
-            superToolTip3.Items.Add(toolTipItem3);
-            this.btnNuevoUsuario.SuperTip = superToolTip3;
+            toolTipItem12.Text = "Nuevo usuario...";
+            superToolTip12.Items.Add(toolTipItem12);
+            this.btnNuevoUsuario.SuperTip = superToolTip12;
             this.btnNuevoUsuario.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnNuevoUsuario_ItemClick);
             // 
             // btnTemas
@@ -209,12 +209,12 @@
             this.btnNuevoCliente.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnNuevoCliente.ImageOptions.Image")));
             this.btnNuevoCliente.Name = "btnNuevoCliente";
             this.btnNuevoCliente.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
-            toolTipTitleItem2.Text = "Nuevo cliente";
-            toolTipItem4.LeftIndent = 6;
-            toolTipItem4.Text = "Registrar nuevo cliente...";
-            superToolTip4.Items.Add(toolTipTitleItem2);
-            superToolTip4.Items.Add(toolTipItem4);
-            this.btnNuevoCliente.SuperTip = superToolTip4;
+            toolTipTitleItem8.Text = "Nuevo cliente";
+            toolTipItem13.LeftIndent = 6;
+            toolTipItem13.Text = "Registrar nuevo cliente...";
+            superToolTip13.Items.Add(toolTipTitleItem8);
+            superToolTip13.Items.Add(toolTipItem13);
+            this.btnNuevoCliente.SuperTip = superToolTip13;
             this.btnNuevoCliente.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnNuevoCliente_ItemClick);
             // 
             // btnClientes
@@ -233,13 +233,13 @@
             this.barButtonItem3.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem3.ImageOptions.Image")));
             this.barButtonItem3.Name = "barButtonItem3";
             this.barButtonItem3.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
-            toolTipTitleItem3.Text = "Logs de inicio";
-            toolTipItem5.LeftIndent = 6;
-            toolTipItem5.Text = "Registro de los inicios de sesión de cada usuario, se guarda la fecha, hora, ip y" +
+            toolTipTitleItem9.Text = "Logs de inicio";
+            toolTipItem14.LeftIndent = 6;
+            toolTipItem14.Text = "Registro de los inicios de sesión de cada usuario, se guarda la fecha, hora, ip y" +
     " equpo de donde entró al sistema.";
-            superToolTip5.Items.Add(toolTipTitleItem3);
-            superToolTip5.Items.Add(toolTipItem5);
-            this.barButtonItem3.SuperTip = superToolTip5;
+            superToolTip14.Items.Add(toolTipTitleItem9);
+            superToolTip14.Items.Add(toolTipItem14);
+            this.barButtonItem3.SuperTip = superToolTip14;
             this.barButtonItem3.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem3_ItemClick);
             // 
             // btnNuevaEmpresa
@@ -285,10 +285,10 @@
             this.btnReimpresión.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnReimpresión.ImageOptions.Image")));
             this.btnReimpresión.Name = "btnReimpresión";
             this.btnReimpresión.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
-            toolTipItem6.Text = "Reimpresión de vales para casos especiales, por ejemplo volver a imprimir un vale" +
+            toolTipItem15.Text = "Reimpresión de vales para casos especiales, por ejemplo volver a imprimir un vale" +
     " o para imprimir vales de prueba.";
-            superToolTip6.Items.Add(toolTipItem6);
-            this.btnReimpresión.SuperTip = superToolTip6;
+            superToolTip15.Items.Add(toolTipItem15);
+            this.btnReimpresión.SuperTip = superToolTip15;
             this.btnReimpresión.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnReimpresión_ItemClick);
             // 
             // btnValesRecibidos
@@ -384,11 +384,11 @@
             this.btnPermisos.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btnPermisos.ImageOptions.LargeImage")));
             this.btnPermisos.Name = "btnPermisos";
             this.btnPermisos.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
-            toolTipTitleItem4.Text = "Permisos";
-            toolTipItem7.Text = "Gestión de permisos por usuario";
-            superToolTip7.Items.Add(toolTipTitleItem4);
-            superToolTip7.Items.Add(toolTipItem7);
-            this.btnPermisos.SuperTip = superToolTip7;
+            toolTipTitleItem10.Text = "Permisos";
+            toolTipItem16.Text = "Gestión de permisos por usuario";
+            superToolTip16.Items.Add(toolTipTitleItem10);
+            superToolTip16.Items.Add(toolTipItem16);
+            this.btnPermisos.SuperTip = superToolTip16;
             this.btnPermisos.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnPermisos_ItemClick);
             // 
             // btnValesPendientes
@@ -400,11 +400,11 @@
             this.btnValesPendientes.ImageOptions.LargeImage = ((System.Drawing.Image)(resources.GetObject("btnValesPendientes.ImageOptions.LargeImage")));
             this.btnValesPendientes.Name = "btnValesPendientes";
             this.btnValesPendientes.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
-            toolTipTitleItem5.Text = "Vales";
-            toolTipItem8.Text = "btnValesPendientes";
-            superToolTip8.Items.Add(toolTipTitleItem5);
-            superToolTip8.Items.Add(toolTipItem8);
-            this.btnValesPendientes.SuperTip = superToolTip8;
+            toolTipTitleItem11.Text = "Vales";
+            toolTipItem17.Text = "btnValesPendientes";
+            superToolTip17.Items.Add(toolTipTitleItem11);
+            superToolTip17.Items.Add(toolTipItem17);
+            this.btnValesPendientes.SuperTip = superToolTip17;
             this.btnValesPendientes.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnValesPendientes_ItemClick);
             // 
             // btnRespaldoBase
@@ -532,12 +532,12 @@
             this.barButtonItem2.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem2.ImageOptions.Image")));
             this.barButtonItem2.Name = "barButtonItem2";
             this.barButtonItem2.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
-            toolTipTitleItem6.Text = "BASE DE DATOS";
-            toolTipItem9.LeftIndent = 6;
-            toolTipItem9.Text = "Configuración de la instancia y base datos del motor SQL SERVER";
-            superToolTip9.Items.Add(toolTipTitleItem6);
-            superToolTip9.Items.Add(toolTipItem9);
-            this.barButtonItem2.SuperTip = superToolTip9;
+            toolTipTitleItem12.Text = "BASE DE DATOS";
+            toolTipItem18.LeftIndent = 6;
+            toolTipItem18.Text = "Configuración de la instancia y base datos del motor SQL SERVER";
+            superToolTip18.Items.Add(toolTipTitleItem12);
+            superToolTip18.Items.Add(toolTipItem18);
+            this.barButtonItem2.SuperTip = superToolTip18;
             // 
             // barButtonItem1
             // 
@@ -604,7 +604,7 @@
             this.IsMdiContainer = true;
             this.Name = "FrmPrincipal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Sistema gestión de vales de gasolina 1.2.0.6";
+            this.Text = "Sistema gestión de vales de gasolina 1.2.0.8";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmPrincipal_FormClosed);
             this.Load += new System.EventHandler(this.FrmPrincipal_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
