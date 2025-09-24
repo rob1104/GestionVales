@@ -100,9 +100,9 @@
             this.lblVersion.Appearance.Options.UseForeColor = true;
             this.lblVersion.Location = new System.Drawing.Point(54, 277);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(127, 19);
+            this.lblVersion.Size = new System.Drawing.Size(137, 19);
             this.lblVersion.TabIndex = 7;
-            this.lblVersion.Text = "Versión: 1.2.0.8";
+            this.lblVersion.Text = "Versión: 1.2.0.10";
             this.lblVersion.DoubleClick += new System.EventHandler(this.lblVersion_DoubleClick);
             // 
             // label1

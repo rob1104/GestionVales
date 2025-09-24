@@ -212,6 +212,8 @@
             DevExpress.DataAccess.Sql.Table table9 = new DevExpress.DataAccess.Sql.Table();
             DevExpress.DataAccess.Sql.Column column83 = new DevExpress.DataAccess.Sql.Column();
             DevExpress.DataAccess.Sql.ColumnExpression columnExpression83 = new DevExpress.DataAccess.Sql.ColumnExpression();
+            DevExpress.DataAccess.Sql.Column column84 = new DevExpress.DataAccess.Sql.Column();
+            DevExpress.DataAccess.Sql.ColumnExpression columnExpression84 = new DevExpress.DataAccess.Sql.ColumnExpression();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter1 = new DevExpress.DataAccess.Sql.QueryParameter();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter2 = new DevExpress.DataAccess.Sql.QueryParameter();
             DevExpress.DataAccess.Sql.QueryParameter queryParameter3 = new DevExpress.DataAccess.Sql.QueryParameter();
@@ -225,7 +227,6 @@
             this.xrLabel5 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel4 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel3 = new DevExpress.XtraReports.UI.XRLabel();
-            this.xrLabel2 = new DevExpress.XtraReports.UI.XRLabel();
             this.TopMargin = new DevExpress.XtraReports.UI.TopMarginBand();
             this.xrPageInfo1 = new DevExpress.XtraReports.UI.XRPageInfo();
             this.xrLabel18 = new DevExpress.XtraReports.UI.XRLabel();
@@ -254,6 +255,7 @@
             this.xrLabel14 = new DevExpress.XtraReports.UI.XRLabel();
             this.xrLabel13 = new DevExpress.XtraReports.UI.XRLabel();
             this.usuario = new DevExpress.XtraReports.Parameters.Parameter();
+            this.xrLabel2 = new DevExpress.XtraReports.UI.XRLabel();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             // 
             // Detail
@@ -272,7 +274,7 @@
             // xrLabel7
             // 
             this.xrLabel7.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
-            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "Concat(\'31/\', \'12/\', GetYear([fecha_emision]))")});
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "AddYears([fecha_emision], 1)")});
             this.xrLabel7.Font = new System.Drawing.Font("Calibri", 9.75F);
             this.xrLabel7.LocationFloat = new DevExpress.Utils.PointFloat(327.7083F, 0F);
             this.xrLabel7.Multiline = true;
@@ -326,19 +328,6 @@
             this.xrLabel3.StylePriority.UseFont = false;
             this.xrLabel3.Text = "xrLabel3";
             this.xrLabel3.TextFormatString = "{0:d}";
-            // 
-            // xrLabel2
-            // 
-            this.xrLabel2.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
-            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[codigo]")});
-            this.xrLabel2.Font = new System.Drawing.Font("Calibri", 9.75F);
-            this.xrLabel2.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
-            this.xrLabel2.Multiline = true;
-            this.xrLabel2.Name = "xrLabel2";
-            this.xrLabel2.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
-            this.xrLabel2.SizeF = new System.Drawing.SizeF(184.375F, 18F);
-            this.xrLabel2.StylePriority.UseFont = false;
-            this.xrLabel2.Text = "xrLabel2";
             // 
             // TopMargin
             // 
@@ -569,7 +558,7 @@
             // 
             // sqlDataSource1
             // 
-            this.sqlDataSource1.ConnectionName = "robbiexis\\sqlexpress.ValesGasolina.dbo";
+            this.sqlDataSource1.ConnectionName = "programacion1\\sqlexpress.ValesGasolina4.dbo";
             this.sqlDataSource1.Name = "sqlDataSource1";
             columnExpression1.ColumnName = "id";
             table1.Name = "clientes";
@@ -909,7 +898,7 @@
             selectQuery7.Name = "ventas";
             selectQuery7.Tables.Add(table7);
             columnExpression80.ColumnName = "codigo";
-            table8.MetaSerializable = "<Meta X=\"30\" Y=\"30\" Width=\"125\" Height=\"324\" />";
+            table8.MetaSerializable = "<Meta X=\"30\" Y=\"30\" Width=\"125\" Height=\"343\" />";
             table8.Name = "vales";
             columnExpression80.Table = table8;
             column80.Expression = columnExpression80;
@@ -917,17 +906,21 @@
             columnExpression81.Table = table8;
             column81.Expression = columnExpression81;
             columnExpression82.ColumnName = "usuario";
-            table9.MetaSerializable = "<Meta X=\"185\" Y=\"30\" Width=\"125\" Height=\"191\" />";
+            table9.MetaSerializable = "<Meta X=\"185\" Y=\"30\" Width=\"125\" Height=\"203\" />";
             table9.Name = "usuarios";
             columnExpression82.Table = table9;
             column82.Expression = columnExpression82;
             columnExpression83.ColumnName = "importe";
             columnExpression83.Table = table8;
             column83.Expression = columnExpression83;
+            columnExpression84.ColumnName = "folio";
+            columnExpression84.Table = table8;
+            column84.Expression = columnExpression84;
             selectQuery8.Columns.Add(column80);
             selectQuery8.Columns.Add(column81);
             selectQuery8.Columns.Add(column82);
             selectQuery8.Columns.Add(column83);
+            selectQuery8.Columns.Add(column84);
             selectQuery8.FilterString = "[vales.id_cliente] = ?parc And [vales.fecha_emision] Between(?parfd, ?parfh)";
             selectQuery8.GroupFilterString = "";
             selectQuery8.Name = "vales_1";
@@ -1024,6 +1017,19 @@
             this.usuario.Name = "usuario";
             this.usuario.Visible = false;
             // 
+            // xrLabel2
+            // 
+            this.xrLabel2.ExpressionBindings.AddRange(new DevExpress.XtraReports.UI.ExpressionBinding[] {
+            new DevExpress.XtraReports.UI.ExpressionBinding("BeforePrint", "Text", "[folio]")});
+            this.xrLabel2.Font = new System.Drawing.Font("Calibri", 9.75F);
+            this.xrLabel2.LocationFloat = new DevExpress.Utils.PointFloat(0F, 0F);
+            this.xrLabel2.Multiline = true;
+            this.xrLabel2.Name = "xrLabel2";
+            this.xrLabel2.Padding = new DevExpress.XtraPrinting.PaddingInfo(2, 2, 0, 0, 100F);
+            this.xrLabel2.SizeF = new System.Drawing.SizeF(184.375F, 18F);
+            this.xrLabel2.StylePriority.UseFont = false;
+            this.xrLabel2.Text = "xrLabel2";
+            // 
             // RptValesIndividuales
             // 
             this.Bands.AddRange(new DevExpress.XtraReports.UI.Band[] {
@@ -1059,7 +1065,6 @@
         private DevExpress.XtraReports.UI.XRLabel xrLabel5;
         private DevExpress.XtraReports.UI.XRLabel xrLabel4;
         private DevExpress.XtraReports.UI.XRLabel xrLabel3;
-        private DevExpress.XtraReports.UI.XRLabel xrLabel2;
         private DevExpress.DataAccess.Sql.SqlDataSource sqlDataSource1;
         private DevExpress.XtraReports.UI.XRLabel xrLabel7;
         private DevExpress.XtraReports.UI.XRLine xrLine1;
@@ -1083,5 +1088,6 @@
         private DevExpress.XtraReports.UI.XRLabel xrLabel14;
         private DevExpress.XtraReports.UI.XRPageInfo xrPageInfo1;
         private DevExpress.XtraReports.UI.XRLabel xrLabel18;
+        private DevExpress.XtraReports.UI.XRLabel xrLabel2;
     }
 }

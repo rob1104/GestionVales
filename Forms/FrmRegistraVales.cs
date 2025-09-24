@@ -18,6 +18,7 @@ namespace GestionValesRdz.Forms
 
         private static Random random = new Random();
 
+        private int loteIdCounter = 0;
 
         public FrmRegistraVales()
         {
@@ -279,64 +280,53 @@ namespace GestionValesRdz.Forms
 
         private void GeneraVenta()
         {
-            // Si no hay items en la lista, no hacemos nada.
-            if (lv.Items.Count == 0)
-            {
-                return;
-            }
+            if (lv.Items.Count == 0) return;
 
             try
             {
-                // --- 1. AGRUPAR VALES POR DENOMINACIÓN ---
-                // Usamos LINQ para agrupar todos los items del ListView por su monto (denominación).
-                // Asumimos que el monto está en la 4ª columna (índice 3).
-                var gruposPorDenominacion = lv.Items.Cast<ListViewItem>()
-                    .GroupBy(item => decimal.Parse(item.SubItems[3].Text, System.Globalization.NumberStyles.Currency));
+                // --- LA NUEVA AGRUPACIÓN MÚLTIPLE ---
+                // Agrupamos por una combinación del Cliente, la Denominación Y el ID del Lote.
+                var gruposDeLotes = lv.Items.Cast<ListViewItem>()
+                    .GroupBy(item => new {
+                        ClienteId = Convert.ToInt32(item.SubItems[5].Text),
+                        Denominacion = decimal.Parse(item.SubItems[3].Text, System.Globalization.NumberStyles.Currency),
+                        LoteId = (int)item.Tag // <-- Usamos la etiqueta que guardamos
+            });
 
-                // Creamos una lista para guardar los registros de venta que vamos a generar.
                 var nuevasVentas = new List<ventas>();
 
-                // --- 2. PROCESAR CADA GRUPO ---
-                // Recorremos cada grupo de vales (ej. todos los de $100, luego todos los de $500, etc.).
-                foreach (var grupo in gruposPorDenominacion)
+                foreach (var grupo in gruposDeLotes)
                 {
-                    decimal denominacionActual = grupo.Key;
+                    // El resto de la lógica es la misma, ya que cada 'grupo' ahora
+                    // representa un lote único y específico que el usuario agregó.
+                    var foliosDelLote = grupo.Select(item => int.Parse(item.Text)).OrderBy(folio => folio).ToList();
+                    if (!foliosDelLote.Any()) continue;
 
-                    // Extraemos los folios de todos los vales que pertenecen a este grupo.
-                    var foliosDelGrupo = grupo.Select(item => int.Parse(item.Text)).OrderBy(folio => folio).ToList();
+                    int cantidad = foliosDelLote.Count;
+                    decimal importeTotal = cantidad * grupo.Key.Denominacion;
+                    int folioInicio = foliosDelLote.First();
+                    int folioFin = foliosDelLote.Last();
+                    int idEmpresa = Convert.ToInt32(grupo.First().SubItems[4].Text);
 
-                    if (!foliosDelGrupo.Any()) continue; // Si el grupo está vacío, lo ignoramos.
-
-                    // Calculamos los datos específicos para ESTA venta.
-                    int cantidad = foliosDelGrupo.Count;
-                    decimal importeTotal = cantidad * denominacionActual;
-                    int folioInicio = foliosDelGrupo.First();
-                    int folioFin = foliosDelGrupo.Last();
-
-                    // Creamos el objeto 'venta' para esta denominación.
                     var venta = new ventas()
                     {
                         fecha = DateTime.Now.Date,
                         folioInicio = folioInicio,
                         folioFin = folioFin,
-                        denominacion = (double)denominacionActual, // <-- ¡Ahora se guarda la denominación correcta!
+                        denominacion = (double)grupo.Key.Denominacion,
                         cantidad = cantidad,
                         importe = (double)importeTotal,
-                        id_cliente = Convert.ToInt32(cmbCliente.EditValue),
-                        id_empresa = Convert.ToInt32(cmbEmpresa.EditValue),
+                        id_cliente = grupo.Key.ClienteId,
+                        id_empresa = idEmpresa,
                         id_usuario = Auth.Id
                     };
-
-                    nuevasVentas.Add(venta); // Añadimos la nueva venta a nuestra lista.
+                    nuevasVentas.Add(venta);
                 }
 
-                // --- 3. GUARDAR TODAS LAS VENTAS ---
-                // Si se generó al menos una venta, la guardamos en la base de datos.
                 if (nuevasVentas.Any())
                 {
                     using (var contexto = AyudanteDeConexion.CrearContexto())
                     {
-                        // Usamos AddRange para guardar todos los registros de venta en una sola transacción.
                         contexto.ventas.AddRange(nuevasVentas);
                         contexto.SaveChanges();
                     }
@@ -344,13 +334,11 @@ namespace GestionValesRdz.Forms
             }
             catch (Exception ex)
             {
-                // Lanzamos la excepción para que el método que lo llamó (btnGuardar_Click) la capture.
                 throw new Exception("Ocurrió un error al generar los registros de venta.", ex);
             }
-
         }
 
-        private void AgregaALista()
+        private void AgregaALista(int loteId)
         {
             try
             {
@@ -394,6 +382,7 @@ namespace GestionValesRdz.Forms
                             item.SubItems.Add(cmbEmpresa.EditValue.ToString());
                             item.SubItems.Add(cmbCliente.EditValue.ToString());
                             item.SubItems.Add(StringAleatorio(12)); // Asumo que tienes este método
+                            item.Tag = loteId;
                             nuevosItems.Add(item);
                         }
                     }
@@ -637,8 +626,10 @@ namespace GestionValesRdz.Forms
                 return;
             }
 
+            loteIdCounter++;
+
             // Llama al método que hace el trabajo pesado de validar y agregar.
-            AgregaALista();
+            AgregaALista(loteIdCounter);
 
             // --- ¡LA MEJORA CLAVE PARA EL USUARIO! ---
             // Una vez agregado un lote, preparamos la pantalla para el siguiente.
